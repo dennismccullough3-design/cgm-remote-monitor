@@ -124,6 +124,27 @@ describe('pavlok', function ( ) {
     (await t.pavlok.handleNotification(alarm('low', levels.WARN))).sent.should.equal(true);
   });
 
+  it('reports each alarm trigger, sent or failed, to the log', async function () {
+    var t = create();
+    var results = [];
+    t.pavlok.onResult = function (result) { results.push(result); };
+
+    await t.pavlok.handleNotification(alarm('low', levels.URGENT));
+    t.pavlok.request = function () { return Promise.reject(new Error('network down')); };
+    await t.pavlok.handleNotification(alarm('high', levels.WARN));
+    await t.pavlok.sendStimulus('beep', 10).catch(function () { });
+
+    results.length.should.equal(2);
+    results[0].should.containEql({ alarm: 'urgentLow', label: 'Urgent Low', sent: true });
+    results[1].should.containEql({ alarm: 'high', label: 'High', sent: false, error: 'network down' });
+  });
+
+  it('keeps sending when the log throws', async function () {
+    var t = create();
+    t.pavlok.onResult = function () { throw new Error('log broken'); };
+    (await t.pavlok.handleNotification(alarm('low', levels.WARN))).sent.should.equal(true);
+  });
+
   it('validates manual stimuli', async function () {
     var t = create();
     should.not.exist(t.pavlok.validateStimulus('zap', 1));
