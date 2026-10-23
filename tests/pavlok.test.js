@@ -35,6 +35,24 @@ describe('pavlok', function ( ) {
     should.not.exist(require('../lib/plugins/pavlok')({ extendedSettings: { pavlok: { apiToken: '  ' } } }));
   });
 
+  it('sends the token as a bearer token, even if pasted with a Bearer prefix', async function () {
+    var pavlok = require('../lib/plugins/pavlok')({
+      extendedSettings: { pavlok: { apiToken: 'Bearer abc.def' } }
+    });
+    var originalFetch = global.fetch;
+    var headers;
+    global.fetch = function (url, options) {
+      headers = options.headers;
+      return Promise.resolve({ ok: true, status: 200, text: function () { return Promise.resolve('{}'); } });
+    };
+    try {
+      await pavlok.sendStimulus('beep', 10);
+    } finally {
+      global.fetch = originalFetch;
+    }
+    headers.Authorization.should.equal('Bearer abc.def');
+  });
+
   it('zaps at 100% for low and urgent low', async function () {
     var t = create();
     await t.pavlok.handleNotification(alarm('low', levels.WARN));
