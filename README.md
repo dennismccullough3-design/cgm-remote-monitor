@@ -847,6 +847,8 @@ When APNs provides no failure details, the message says so. Unexpected failures 
 
   Admins can send a test zap, vibration or beep at any strength from **Pavlok Watch** in the menu (this opens the Pavlok section of Admin Tools).
 
+  The same screen has a **Pavlok alarm log** showing how many times each alarm has triggered the watch (last 24 hours, 7 days, 30 days and total, plus failed sends) and the most recent triggers. Log entries are stored in the `pavlok_log` collection and kept for 365 days. Manual tests are not counted.
+
 
 ### Treatment Profile
   Some of the [plugins](#plugins) make use of a treatment profile that can be edited using the Profile Editor, see the link in the Settings drawer on your site.
