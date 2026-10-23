@@ -110,6 +110,7 @@ See [CONTRIBUTING.md](CONTRIBUTING.md)
       - [Extended Settings](#extended-settings)
       - [Pushover](#pushover)
       - [IFTTT Maker](#ifttt-maker)
+      - [Pavlok Watch](#pavlok-watch)
     - [Treatment Profile](#treatment-profile)
   - [Setting environment variables](#setting-environment-variables)
     - [Vagrant install](#vagrant-install)
@@ -775,6 +776,19 @@ For remote overrides, the following extended settings must be configured:
   * `ns-warning` - Alarms at the warning level with cause this event to also be triggered.  It will be sent in addition to `ns-event`.
   * `ns-urgent` - Alarms at the urgent level with cause this event to also be triggered.  It will be sent in addition to `ns-event`.
   * see the [full list of events](docs/plugins/maker-setup.md#events)
+
+#### Pavlok Watch
+  Sends Nightscout's low and high alarms to a [Pavlok](https://pavlok.com) watch. Only alarms that are enabled and not snoozed are sent. Low and urgent low alarms zap at 100%. High and urgent high alarms vibrate at 100% and then beep at 100%.
+
+  * `ENABLE` - must include `pavlok`
+  * `PAVLOK_API_TOKEN` - your Pavlok API bearer token. *Required.*
+  * `PAVLOK_API_URL` (`https://api.pavlok.com/api/v5/stimulus/send`) - Pavlok stimulus endpoint
+  * `PAVLOK_URGENT_LOW_COOLDOWN` (`5`) - minutes before another urgent low zap
+  * `PAVLOK_LOW_COOLDOWN` (`10`) - minutes before another low zap
+  * `PAVLOK_HIGH_COOLDOWN` (`30`) - minutes before another high vibrate/beep
+  * `PAVLOK_URGENT_HIGH_COOLDOWN` (`30`) - minutes before another urgent high vibrate/beep
+
+  Admins can send a test zap, vibration or beep at any strength from **Pavlok Watch** in the menu (this opens the Pavlok section of Admin Tools).
 
 
 ### Treatment Profile
