@@ -835,15 +835,17 @@ When APNs provides no failure details, the message says so. Unexpected failures 
   * see the [full list of events](docs/plugins/maker-setup.md#events)
 
 #### Pavlok Watch
-  Sends Nightscout's low and high alarms to a [Pavlok](https://pavlok.com) watch. Only alarms that are enabled and not snoozed are sent. Low and urgent low alarms zap at 100%. High and urgent high alarms vibrate at 100% and then beep at 100%.
+  Sends Nightscout's low, high and stale data alarms to a [Pavlok](https://pavlok.com) watch. Only alarms that are enabled and not snoozed are sent. Low and urgent low alarms zap at 100%. High and urgent high alarms vibrate at 100%. Stale data (no CGM data) warning and urgent alarms vibrate at 100%; these need `TIMEAGO_ENABLE_ALERTS=true` (see the `timeago` plugin for the 15/30 minute thresholds).
 
   * `ENABLE` - must include `pavlok`
   * `PAVLOK_API_TOKEN` - your Pavlok API bearer token. *Required.*
   * `PAVLOK_API_URL` (`https://api.pavlok.com/api/v5/stimulus/send`) - Pavlok stimulus endpoint
   * `PAVLOK_URGENT_LOW_COOLDOWN` (`5`) - minutes before another urgent low zap
   * `PAVLOK_LOW_COOLDOWN` (`10`) - minutes before another low zap
-  * `PAVLOK_HIGH_COOLDOWN` (`30`) - minutes before another high vibrate/beep
-  * `PAVLOK_URGENT_HIGH_COOLDOWN` (`30`) - minutes before another urgent high vibrate/beep
+  * `PAVLOK_HIGH_COOLDOWN` (`30`) - minutes before another high vibration
+  * `PAVLOK_URGENT_HIGH_COOLDOWN` (`30`) - minutes before another urgent high vibration
+  * `PAVLOK_NO_DATA_COOLDOWN` (`30`) - minutes before another no CGM data (warning) vibration
+  * `PAVLOK_URGENT_NO_DATA_COOLDOWN` (`30`) - minutes before another urgent no CGM data vibration
 
   Admins can send a test zap, vibration or beep at any strength from **Pavlok Watch** in the menu (this opens the Pavlok section of Admin Tools).
 

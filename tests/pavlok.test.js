@@ -63,12 +63,23 @@ describe('pavlok', function ( ) {
     ]);
   });
 
-  it('vibrates then beeps at 100% for high and urgent high', async function () {
+  it('only vibrates at 100% for high and urgent high', async function () {
     var t = create();
     await t.pavlok.handleNotification(alarm('high', levels.WARN));
+    await t.pavlok.handleNotification(alarm('high', levels.URGENT));
     t.sent.should.eql([
       { stimulusType: 'vibe', stimulusValue: 100 }
-      , { stimulusType: 'beep', stimulusValue: 100 }
+      , { stimulusType: 'vibe', stimulusValue: 100 }
+    ]);
+  });
+
+  it('vibrates at 100% for no CGM data (stale data) alarms', async function () {
+    var t = create();
+    (await t.pavlok.handleNotification(alarm('timeago', levels.WARN))).alarm.should.equal('noData');
+    (await t.pavlok.handleNotification(alarm('timeago', levels.URGENT))).alarm.should.equal('urgentNoData');
+    t.sent.should.eql([
+      { stimulusType: 'vibe', stimulusValue: 100 }
+      , { stimulusType: 'vibe', stimulusValue: 100 }
     ]);
   });
 
@@ -87,6 +98,8 @@ describe('pavlok', function ( ) {
       , { eventName: 'low', level: levels.WARN, mins: 10 }
       , { eventName: 'high', level: levels.WARN, mins: 30 }
       , { eventName: 'high', level: levels.URGENT, mins: 30 }
+      , { eventName: 'timeago', level: levels.WARN, mins: 30 }
+      , { eventName: 'timeago', level: levels.URGENT, mins: 30 }
     ];
 
     for (var e of expectations) {
@@ -159,7 +172,7 @@ describe('pavlok', function ( ) {
     await t.pavlok.sendStimulus('zap', 500).should.be.rejected();
   });
 
-  it('is triggered by pushnotify for enabled low/high alarms', function () {
+  it('is triggered by pushnotify for enabled low/high and stale data alarms', function () {
     var env = require('../lib/server/env')();
     var ctx = { levels: levels };
     var handled = [];
@@ -169,10 +182,10 @@ describe('pavlok', function ( ) {
     ctx.pushnotify = require('../lib/server/pushnotify')(env, ctx);
 
     ctx.pushnotify.emitNotification(alarm('low', levels.URGENT));
+    ctx.pushnotify.emitNotification(Object.assign(alarm('timeago', levels.WARN), { plugin: { name: 'timeago' }, group: 'Time Ago' }));
     ctx.pushnotify.emitNotification({ clear: true, title: 'All Clear', message: 'cleared' });
 
-    handled.length.should.equal(1);
-    handled[0].eventName.should.equal('low');
+    handled.map(function (n) { return n.eventName; }).should.eql(['low', 'timeago']);
   });
 
 });
