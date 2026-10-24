@@ -339,6 +339,56 @@ describe('pavlok', function ( ) {
 
     });
 
+    describe('cooldowns', function () {
+
+      it('starts each watch with the default cooldowns', function () {
+        var t = createTwo({ lowCooldown: 12 });
+        var settings = t.pavlok.getSettings();
+        settings.watches['1'].alarms.low.cooldownMins.should.equal(12);
+        settings.watches['2'].alarms.urgentLow.cooldownMins.should.equal(5);
+        t.pavlok.status().alarms.find(function (a) { return a.key === 'low'; }).defaultCooldownMins.should.equal(12);
+      });
+
+      it('uses the cooldown set for each watch', async function () {
+        var t = createTwo();
+        t.pavlok.applySettings({ watches: { '1': { alarms: { low: { cooldownMins: 3 } } } } });
+
+        await t.pavlok.handleNotification(alarm('low', levels.WARN));
+        t.advanceMins(3);
+        var result = await t.pavlok.handleNotification(alarm('low', levels.WARN));
+        result.watches.map(function (w) { return w.watch; }).should.eql(['1']);
+        result.skipped['2'].should.equal('cooldown');
+        t.pavlok.status().watches[1].cooldownRemainingMins.low.should.equal(7);
+      });
+
+      it('allows no cooldown at all', async function () {
+        var t = create();
+        t.pavlok.applySettings({ watches: { '1': { alarms: { high: { cooldownMins: 0 } } } } });
+        await t.pavlok.handleNotification(alarm('high', levels.WARN));
+        (await t.pavlok.handleNotification(alarm('high', levels.WARN))).sent.should.equal(true);
+      });
+
+      it('takes effect for an alarm already cooling down', async function () {
+        var t = create();
+        await t.pavlok.handleNotification(alarm('high', levels.WARN));
+        t.advanceMins(15);
+        (await t.pavlok.handleNotification(alarm('high', levels.WARN))).skipped['1'].should.equal('cooldown');
+        t.pavlok.applySettings({ watches: { '1': { alarms: { high: { cooldownMins: 15 } } } } });
+        (await t.pavlok.handleNotification(alarm('high', levels.WARN))).sent.should.equal(true);
+      });
+
+      it('ignores invalid cooldowns', function () {
+        var t = create();
+        [-1, 1441, 2.5, 'ten', null, ''].forEach(function (value) {
+          t.pavlok.applySettings({ watches: { '1': { alarms: { low: { cooldownMins: value } } } } });
+        });
+        t.pavlok.getSettings().watches['1'].alarms.low.cooldownMins.should.equal(10);
+        t.pavlok.applySettings({ watches: { '1': { alarms: { low: { cooldownMins: 1440 } } } } });
+        t.pavlok.getSettings().watches['1'].alarms.low.cooldownMins.should.equal(1440);
+      });
+
+    });
+
     it('restores saved settings, including names', async function () {
       var t = createTwo();
       t.pavlok.applySettings({ watches: { '2': { name: 'Caregiver', alarms: { urgentLow: { strength: 60 } } } } });
