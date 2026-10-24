@@ -28,19 +28,22 @@ describe('pavloklog', function ( ) {
     return { docs: docs, pipelines: pipelines, collection: collection, store: { collection: function () { return collection; } } };
   }
 
-  it('records alarm triggers with a capped error message', async function () {
+  it('records alarm triggers per watch with capped error messages', async function () {
     var fake = fakeStore();
     var log = require('../lib/server/pavloklog')({}, { store: fake.store });
 
-    await log.record({ alarm: 'low', label: 'Low', title: 'Warning LOW', sent: true, stimuli: [{ type: 'zap', value: 100 }] });
-    await log.record({ alarm: 'high', label: 'High', title: 'Warning HIGH', sent: false, error: 'x'.repeat(500) });
+    await log.record({ alarm: 'low', label: 'Low', title: 'Warning LOW', sent: true, watches: [
+      { watch: '1', name: 'Me', sent: true, type: 'zap', value: 100 }
+      , { watch: '2', name: 'Mom', sent: false, type: 'zap', value: 60, error: 'x'.repeat(500) }
+    ] });
 
-    fake.docs.length.should.equal(2);
+    fake.docs.length.should.equal(1);
     fake.docs[0].alarm.should.equal('low');
     fake.docs[0].sent.should.equal(true);
     fake.docs[0].date.should.be.instanceof(Date);
-    fake.docs[1].sent.should.equal(false);
-    fake.docs[1].error.length.should.equal(200);
+    fake.docs[0].watches[0].should.eql({ watch: '1', name: 'Me', sent: true, type: 'zap', value: 100 });
+    fake.docs[0].watches[1].sent.should.equal(false);
+    fake.docs[0].watches[1].error.length.should.equal(200);
   });
 
   it('expires entries after a year', async function () {
