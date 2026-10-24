@@ -260,7 +260,7 @@ describe('pavlok', function ( ) {
       } });
       var settings = t.pavlok.getSettings();
       settings.watches['1'].should.containEql({ name: 'Watch 1', enabled: true, pausedUntil: null });
-      settings.watches['1'].alarms.low.should.eql({ enabled: true, strength: 100 });
+      settings.watches['1'].alarms.low.should.containEql({ enabled: true, strength: 100 });
       should.not.exist(settings.watches['9']);
     });
 
@@ -269,6 +269,74 @@ describe('pavlok', function ( ) {
       var now = t.pavlok.now();
       t.pavlok.applySettings({ watches: { '1': { pauseMins: 999999 } } });
       t.pavlok.getSettings().watches['1'].pausedUntil.should.equal(now + 7 * 24 * 60 * 60 * 1000);
+    });
+
+    describe('schedules', function () {
+
+      // the test clock starts on Saturday 2001-09-08 at 20:46 in Chicago
+      function scheduled (schedule) {
+        var t = createTwo({ timezone: 'America/Chicago' });
+        t.pavlok.applySettings({ watches: { '1': { alarms: { low: { schedule: schedule } } } } });
+        return t;
+      }
+
+      it('sends only inside a daytime window', async function () {
+        var t = scheduled({ mode: 'window', start: '08:00', end: '22:00', days: [0, 1, 2, 3, 4, 5, 6] });
+        (await t.pavlok.handleNotification(alarm('low', levels.WARN))).watches.length.should.equal(2);
+        t.advanceMins(120);
+        var later = await t.pavlok.handleNotification(alarm('low', levels.WARN));
+        later.skipped['1'].should.equal('outside schedule');
+        later.watches.map(function (w) { return w.watch; }).should.eql(['2']);
+      });
+
+      it('runs an overnight window into the next morning', async function () {
+        var t = scheduled({ mode: 'window', start: '22:00', end: '07:00', days: [6] });
+        (await t.pavlok.handleNotification(alarm('low', levels.WARN))).skipped['1'].should.equal('outside schedule');
+        t.advanceMins(75);
+        (await t.pavlok.handleNotification(alarm('low', levels.WARN))).watches[0].watch.should.equal('1');
+        t.advanceMins(240);
+        t.pavlok.status().watches[0].inScheduleNow.low.should.equal(true);
+        t.advanceMins(300);
+        t.pavlok.status().watches[0].inScheduleNow.low.should.equal(false);
+      });
+
+      it('limits an alarm to chosen days', async function () {
+        var t = scheduled({ mode: 'window', start: '00:00', end: '00:00', days: [0] });
+        (await t.pavlok.handleNotification(alarm('low', levels.WARN))).skipped['1'].should.equal('outside schedule');
+        t.advanceMins(4 * 60);
+        t.pavlok.status().watches[0].inScheduleNow.low.should.equal(true);
+      });
+
+      it('leaves other alarms on the same watch alone', async function () {
+        var t = scheduled({ mode: 'window', start: '08:00', end: '09:00', days: [1] });
+        (await t.pavlok.handleNotification(alarm('low', levels.URGENT))).watches.length.should.equal(2);
+      });
+
+      it('uses the time zone saved from the admin page', function () {
+        var t = scheduled({ mode: 'window', start: '08:00', end: '22:00', days: [6] });
+        t.pavlok.status().watches[0].inScheduleNow.low.should.equal(true);
+        t.pavlok.applySettings({ timezone: 'Asia/Tokyo' });
+        t.pavlok.status().timezone.should.equal('Asia/Tokyo');
+        t.pavlok.status().watches[0].inScheduleNow.low.should.equal(false);
+      });
+
+      it('ignores an invalid time zone or schedule', function () {
+        var t = scheduled({ mode: 'window', start: '08:00', end: '22:00', days: [6] });
+        t.pavlok.applySettings({ timezone: 'Mars/Olympus', watches: { '1': { alarms: { low: {
+          schedule: { mode: 'sometimes', start: '25:00', end: 'noon', days: [] }
+        } } } } });
+        var settings = t.pavlok.getSettings();
+        settings.timezone.should.equal('America/Chicago');
+        settings.watches['1'].alarms.low.schedule.should.eql({ mode: 'window', start: '08:00', end: '22:00', days: [6] });
+        t.pavlok.isValidTimeZone('Mars/Olympus').should.equal(false);
+      });
+
+      it('defaults to any time', async function () {
+        var t = create({ timezone: 'America/Chicago' });
+        t.pavlok.getSettings().watches['1'].alarms.high.schedule.mode.should.equal('always');
+        (await t.pavlok.handleNotification(alarm('high', levels.WARN))).sent.should.equal(true);
+      });
+
     });
 
     it('restores saved settings, including names', async function () {
