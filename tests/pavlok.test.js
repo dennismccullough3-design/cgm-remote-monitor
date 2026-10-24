@@ -12,10 +12,9 @@ describe('pavlok', function ( ) {
     var sent = [];
     var clock = 1000000000000;
 
-    pavlok.stimulusGapMs = 0;
     pavlok.now = function () { return clock; };
-    pavlok.request = function (body) {
-      sent.push(body.stimulus);
+    pavlok.request = function (watch, body) {
+      sent.push({ watch: watch.id, type: body.stimulus.stimulusType, value: body.stimulus.stimulusValue });
       return Promise.resolve({ status: 200 });
     };
 
@@ -24,6 +23,10 @@ describe('pavlok', function ( ) {
       , sent: sent
       , advanceMins: function (mins) { clock += mins * 60 * 1000; }
     };
+  }
+
+  function createTwo (settings) {
+    return create(Object.assign({ apiToken2: 'second-token', name2: 'Mom' }, settings));
   }
 
   function alarm (eventName, level) {
@@ -35,22 +38,27 @@ describe('pavlok', function ( ) {
     should.not.exist(require('../lib/plugins/pavlok')({ extendedSettings: { pavlok: { apiToken: '  ' } } }));
   });
 
-  it('sends the token as a bearer token, even if pasted with a Bearer prefix', async function () {
+  it('sends each watch its own token as a bearer token, even if pasted with a Bearer prefix', async function () {
     var pavlok = require('../lib/plugins/pavlok')({
-      extendedSettings: { pavlok: { apiToken: 'Bearer abc.def' } }
+      extendedSettings: { pavlok: { apiToken: 'Bearer abc.def', apiToken2: 12345 } }
     });
     var originalFetch = global.fetch;
-    var headers;
+    var auth = [];
     global.fetch = function (url, options) {
-      headers = options.headers;
+      auth.push(options.headers.Authorization);
       return Promise.resolve({ ok: true, status: 200, text: function () { return Promise.resolve('{}'); } });
     };
     try {
-      await pavlok.sendStimulus('beep', 10);
+      await pavlok.sendTest('all', 'beep', 10);
     } finally {
       global.fetch = originalFetch;
     }
-    headers.Authorization.should.equal('Bearer abc.def');
+    auth.should.eql(['Bearer abc.def', 'Bearer 12345']);
+  });
+
+  it('works with only the second token set', function () {
+    var pavlok = require('../lib/plugins/pavlok')({ extendedSettings: { pavlok: { apiToken2: 'x' } } });
+    pavlok.status().watches.map(function (w) { return w.id; }).should.eql(['2']);
   });
 
   it('zaps at 100% for low and urgent low', async function () {
@@ -58,8 +66,8 @@ describe('pavlok', function ( ) {
     await t.pavlok.handleNotification(alarm('low', levels.WARN));
     await t.pavlok.handleNotification(alarm('low', levels.URGENT));
     t.sent.should.eql([
-      { stimulusType: 'zap', stimulusValue: 100 }
-      , { stimulusType: 'zap', stimulusValue: 100 }
+      { watch: '1', type: 'zap', value: 100 }
+      , { watch: '1', type: 'zap', value: 100 }
     ]);
   });
 
@@ -68,8 +76,8 @@ describe('pavlok', function ( ) {
     await t.pavlok.handleNotification(alarm('high', levels.WARN));
     await t.pavlok.handleNotification(alarm('high', levels.URGENT));
     t.sent.should.eql([
-      { stimulusType: 'vibe', stimulusValue: 100 }
-      , { stimulusType: 'vibe', stimulusValue: 100 }
+      { watch: '1', type: 'vibe', value: 100 }
+      , { watch: '1', type: 'vibe', value: 100 }
     ]);
   });
 
@@ -78,8 +86,8 @@ describe('pavlok', function ( ) {
     (await t.pavlok.handleNotification(alarm('timeago', levels.WARN))).alarm.should.equal('noData');
     (await t.pavlok.handleNotification(alarm('timeago', levels.URGENT))).alarm.should.equal('urgentNoData');
     t.sent.should.eql([
-      { stimulusType: 'vibe', stimulusValue: 100 }
-      , { stimulusType: 'vibe', stimulusValue: 100 }
+      { watch: '1', type: 'vibe', value: 100 }
+      , { watch: '1', type: 'vibe', value: 100 }
     ]);
   });
 
@@ -106,7 +114,7 @@ describe('pavlok', function ( ) {
       var t = create();
       (await t.pavlok.handleNotification(alarm(e.eventName, e.level))).sent.should.equal(true);
       t.advanceMins(e.mins - 1);
-      (await t.pavlok.handleNotification(alarm(e.eventName, e.level))).reason.should.equal('cooldown');
+      (await t.pavlok.handleNotification(alarm(e.eventName, e.level))).skipped['1'].should.equal('cooldown');
       t.advanceMins(1);
       (await t.pavlok.handleNotification(alarm(e.eventName, e.level))).sent.should.equal(true);
     }
@@ -128,28 +136,238 @@ describe('pavlok', function ( ) {
 
   it('retries on the next alarm when sending fails', async function () {
     var t = create();
+    var request = t.pavlok.request;
     t.pavlok.request = function () { return Promise.reject(new Error('network down')); };
     var result = await t.pavlok.handleNotification(alarm('low', levels.WARN));
     result.sent.should.equal(false);
-    result.reason.should.equal('error');
+    result.watches[0].error.should.equal('network down');
 
-    t.pavlok.request = function () { return Promise.resolve({ status: 200 }); };
+    t.pavlok.request = request;
     (await t.pavlok.handleNotification(alarm('low', levels.WARN))).sent.should.equal(true);
   });
 
-  it('reports each alarm trigger, sent or failed, to the log', async function () {
-    var t = create();
+  describe('two watches', function () {
+
+    it('sends every alarm to both watches', async function () {
+      var t = createTwo();
+      var result = await t.pavlok.handleNotification(alarm('low', levels.URGENT));
+      t.sent.should.eql([
+        { watch: '1', type: 'zap', value: 100 }
+        , { watch: '2', type: 'zap', value: 100 }
+      ]);
+      result.watches.map(function (w) { return w.name; }).should.eql(['Watch 1', 'Mom']);
+    });
+
+    it('still alerts one watch when the other fails, and retries only the failed one', async function () {
+      var t = createTwo();
+      var request = t.pavlok.request;
+      t.pavlok.request = function (watch, body) {
+        return watch.id === '2' ? Promise.reject(new Error('401')) : request(watch, body);
+      };
+
+      var first = await t.pavlok.handleNotification(alarm('low', levels.WARN));
+      first.sent.should.equal(true);
+      first.watches[1].should.containEql({ watch: '2', sent: false, error: '401' });
+
+      t.pavlok.request = request;
+      t.advanceMins(1);
+      var second = await t.pavlok.handleNotification(alarm('low', levels.WARN));
+      second.watches.map(function (w) { return w.watch; }).should.eql(['2']);
+      second.skipped['1'].should.equal('cooldown');
+    });
+
+    it('sends manual tests to one watch or all', async function () {
+      var t = createTwo();
+      await t.pavlok.sendTest('2', 'vibe', 40);
+      await t.pavlok.sendTest('all', 'beep', 10);
+      t.sent.should.eql([
+        { watch: '2', type: 'vibe', value: 40 }
+        , { watch: '1', type: 'beep', value: 10 }
+        , { watch: '2', type: 'beep', value: 10 }
+      ]);
+      await t.pavlok.sendTest('3', 'beep', 10).should.be.rejected();
+    });
+
+  });
+
+  describe('settings from the admin page', function () {
+
+    it('turns all alarms off for one watch', async function () {
+      var t = createTwo();
+      t.pavlok.applySettings({ watches: { '2': { enabled: false } } });
+      var result = await t.pavlok.handleNotification(alarm('low', levels.URGENT));
+      t.sent.should.eql([{ watch: '1', type: 'zap', value: 100 }]);
+      result.skipped['2'].should.equal('turned off');
+    });
+
+    it('pauses a watch and resumes it automatically', async function () {
+      var t = create();
+      t.pavlok.applySettings({ watches: { '1': { pauseMins: 60 } } });
+      t.pavlok.status().watches[0].paused.should.equal(true);
+
+      (await t.pavlok.handleNotification(alarm('low', levels.URGENT))).skipped['1'].should.equal('paused');
+      t.advanceMins(60);
+      (await t.pavlok.handleNotification(alarm('low', levels.URGENT))).sent.should.equal(true);
+      t.pavlok.status().watches[0].paused.should.equal(false);
+    });
+
+    it('resumes a paused watch right away', async function () {
+      var t = create();
+      t.pavlok.applySettings({ watches: { '1': { pauseMins: 60 } } });
+      t.pavlok.applySettings({ watches: { '1': { pauseMins: 0 } } });
+      (await t.pavlok.handleNotification(alarm('low', levels.URGENT))).sent.should.equal(true);
+    });
+
+    it('turns off a single alarm and changes strength per watch', async function () {
+      var t = createTwo();
+      t.pavlok.applySettings({ watches: {
+        '1': { alarms: { high: { enabled: false } } }
+        , '2': { alarms: { low: { strength: 30 } } }
+      } });
+
+      await t.pavlok.handleNotification(alarm('high', levels.WARN));
+      await t.pavlok.handleNotification(alarm('low', levels.WARN));
+      t.sent.should.eql([
+        { watch: '2', type: 'vibe', value: 100 }
+        , { watch: '1', type: 'zap', value: 100 }
+        , { watch: '2', type: 'zap', value: 30 }
+      ]);
+    });
+
+    it('sends nothing and logs nothing when every watch is off', async function () {
+      var t = createTwo();
+      var logged = [];
+      t.pavlok.onResult = function (r) { logged.push(r); };
+      t.pavlok.applySettings({ watches: { '1': { enabled: false }, '2': { pauseMins: 30 } } });
+      var result = await t.pavlok.handleNotification(alarm('low', levels.URGENT));
+      result.sent.should.equal(false);
+      result.reason.should.equal('skipped');
+      t.sent.length.should.equal(0);
+      logged.length.should.equal(0);
+    });
+
+    it('manual tests still work while a watch is off', async function () {
+      var t = create();
+      t.pavlok.applySettings({ watches: { '1': { enabled: false } } });
+      (await t.pavlok.sendTest('1', 'vibe', 20))[0].sent.should.equal(true);
+    });
+
+    it('ignores invalid settings', function () {
+      var t = create();
+      t.pavlok.applySettings({ watches: {
+        '1': { name: '   ', enabled: 'no', pauseMins: -5, alarms: { low: { strength: 500, enabled: 'off' }, bogus: { enabled: false } } }
+        , '9': { enabled: false }
+      } });
+      var settings = t.pavlok.getSettings();
+      settings.watches['1'].should.containEql({ name: 'Watch 1', enabled: true, pausedUntil: null });
+      settings.watches['1'].alarms.low.should.containEql({ enabled: true, strength: 100 });
+      should.not.exist(settings.watches['9']);
+    });
+
+    it('caps a pause at 7 days', function () {
+      var t = create();
+      var now = t.pavlok.now();
+      t.pavlok.applySettings({ watches: { '1': { pauseMins: 999999 } } });
+      t.pavlok.getSettings().watches['1'].pausedUntil.should.equal(now + 7 * 24 * 60 * 60 * 1000);
+    });
+
+    describe('schedules', function () {
+
+      // the test clock starts on Saturday 2001-09-08 at 20:46 in Chicago
+      function scheduled (schedule) {
+        var t = createTwo({ timezone: 'America/Chicago' });
+        t.pavlok.applySettings({ watches: { '1': { alarms: { low: { schedule: schedule } } } } });
+        return t;
+      }
+
+      it('sends only inside a daytime window', async function () {
+        var t = scheduled({ mode: 'window', start: '08:00', end: '22:00', days: [0, 1, 2, 3, 4, 5, 6] });
+        (await t.pavlok.handleNotification(alarm('low', levels.WARN))).watches.length.should.equal(2);
+        t.advanceMins(120);
+        var later = await t.pavlok.handleNotification(alarm('low', levels.WARN));
+        later.skipped['1'].should.equal('outside schedule');
+        later.watches.map(function (w) { return w.watch; }).should.eql(['2']);
+      });
+
+      it('runs an overnight window into the next morning', async function () {
+        var t = scheduled({ mode: 'window', start: '22:00', end: '07:00', days: [6] });
+        (await t.pavlok.handleNotification(alarm('low', levels.WARN))).skipped['1'].should.equal('outside schedule');
+        t.advanceMins(75);
+        (await t.pavlok.handleNotification(alarm('low', levels.WARN))).watches[0].watch.should.equal('1');
+        t.advanceMins(240);
+        t.pavlok.status().watches[0].inScheduleNow.low.should.equal(true);
+        t.advanceMins(300);
+        t.pavlok.status().watches[0].inScheduleNow.low.should.equal(false);
+      });
+
+      it('limits an alarm to chosen days', async function () {
+        var t = scheduled({ mode: 'window', start: '00:00', end: '00:00', days: [0] });
+        (await t.pavlok.handleNotification(alarm('low', levels.WARN))).skipped['1'].should.equal('outside schedule');
+        t.advanceMins(4 * 60);
+        t.pavlok.status().watches[0].inScheduleNow.low.should.equal(true);
+      });
+
+      it('leaves other alarms on the same watch alone', async function () {
+        var t = scheduled({ mode: 'window', start: '08:00', end: '09:00', days: [1] });
+        (await t.pavlok.handleNotification(alarm('low', levels.URGENT))).watches.length.should.equal(2);
+      });
+
+      it('uses the time zone saved from the admin page', function () {
+        var t = scheduled({ mode: 'window', start: '08:00', end: '22:00', days: [6] });
+        t.pavlok.status().watches[0].inScheduleNow.low.should.equal(true);
+        t.pavlok.applySettings({ timezone: 'Asia/Tokyo' });
+        t.pavlok.status().timezone.should.equal('Asia/Tokyo');
+        t.pavlok.status().watches[0].inScheduleNow.low.should.equal(false);
+      });
+
+      it('ignores an invalid time zone or schedule', function () {
+        var t = scheduled({ mode: 'window', start: '08:00', end: '22:00', days: [6] });
+        t.pavlok.applySettings({ timezone: 'Mars/Olympus', watches: { '1': { alarms: { low: {
+          schedule: { mode: 'sometimes', start: '25:00', end: 'noon', days: [] }
+        } } } } });
+        var settings = t.pavlok.getSettings();
+        settings.timezone.should.equal('America/Chicago');
+        settings.watches['1'].alarms.low.schedule.should.eql({ mode: 'window', start: '08:00', end: '22:00', days: [6] });
+        t.pavlok.isValidTimeZone('Mars/Olympus').should.equal(false);
+      });
+
+      it('defaults to any time', async function () {
+        var t = create({ timezone: 'America/Chicago' });
+        t.pavlok.getSettings().watches['1'].alarms.high.schedule.mode.should.equal('always');
+        (await t.pavlok.handleNotification(alarm('high', levels.WARN))).sent.should.equal(true);
+      });
+
+    });
+
+    it('restores saved settings, including names', async function () {
+      var t = createTwo();
+      t.pavlok.applySettings({ watches: { '2': { name: 'Caregiver', alarms: { urgentLow: { strength: 60 } } } } });
+      var saved = JSON.parse(JSON.stringify(t.pavlok.getSettings()));
+
+      var restarted = createTwo();
+      restarted.pavlok.applySettings(saved);
+      await restarted.pavlok.handleNotification(alarm('low', levels.URGENT));
+      restarted.sent[1].should.eql({ watch: '2', type: 'zap', value: 60 });
+      restarted.pavlok.status().watches[1].name.should.equal('Caregiver');
+    });
+
+  });
+
+  it('reports each alarm trigger with per-watch results to the log', async function () {
+    var t = createTwo();
     var results = [];
     t.pavlok.onResult = function (result) { results.push(result); };
 
     await t.pavlok.handleNotification(alarm('low', levels.URGENT));
     t.pavlok.request = function () { return Promise.reject(new Error('network down')); };
     await t.pavlok.handleNotification(alarm('high', levels.WARN));
-    await t.pavlok.sendStimulus('beep', 10).catch(function () { });
+    await t.pavlok.sendTest('all', 'beep', 10);
 
     results.length.should.equal(2);
     results[0].should.containEql({ alarm: 'urgentLow', label: 'Urgent Low', sent: true });
-    results[1].should.containEql({ alarm: 'high', label: 'High', sent: false, error: 'network down' });
+    results[0].watches.length.should.equal(2);
+    results[1].should.containEql({ alarm: 'high', sent: false });
+    results[1].watches[0].error.should.equal('network down');
   });
 
   it('keeps sending when the log throws', async function () {
@@ -167,9 +385,9 @@ describe('pavlok', function ( ) {
     should.exist(t.pavlok.validateStimulus('vibe', 101));
     should.exist(t.pavlok.validateStimulus('vibe', 12.5));
 
-    await t.pavlok.sendStimulus('vibe', 40);
-    t.sent.should.eql([{ stimulusType: 'vibe', stimulusValue: 40 }]);
-    await t.pavlok.sendStimulus('zap', 500).should.be.rejected();
+    await t.pavlok.sendStimulus('1', 'vibe', 40);
+    t.sent.should.eql([{ watch: '1', type: 'vibe', value: 40 }]);
+    await t.pavlok.sendStimulus('1', 'zap', 500).should.be.rejected();
   });
 
   it('is triggered by pushnotify for enabled low/high and stale data alarms', function () {

@@ -835,10 +835,13 @@ When APNs provides no failure details, the message says so. Unexpected failures 
   * see the [full list of events](docs/plugins/maker-setup.md#events)
 
 #### Pavlok Watch
-  Sends Nightscout's low, high and stale data alarms to a [Pavlok](https://pavlok.com) watch. Only alarms that are enabled and not snoozed are sent. Low and urgent low alarms zap at 100%. High and urgent high alarms vibrate at 100%. Stale data (no CGM data) warning and urgent alarms vibrate at 100%; these need `TIMEAGO_ENABLE_ALERTS=true` (see the `timeago` plugin for the 15/30 minute thresholds).
+  Sends Nightscout's low, high and stale data alarms to one or two [Pavlok](https://pavlok.com) watches. Only alarms that are enabled and not snoozed are sent. Low and urgent low alarms zap. High and urgent high alarms vibrate. Stale data (no CGM data) warning and urgent alarms vibrate. Strength defaults to 100%. The stale data alarms need `TIMEAGO_ENABLE_ALERTS=true` (see the `timeago` plugin for the 15/30 minute thresholds).
 
   * `ENABLE` - must include `pavlok`
-  * `PAVLOK_API_TOKEN` - your Pavlok API bearer token. *Required.*
+  * `PAVLOK_API_TOKEN` - Pavlok API bearer token for the first watch. *Required* unless only a second watch is used.
+  * `PAVLOK_API_TOKEN_2` - Pavlok API bearer token for a second watch, which receives the same alarms
+  * `PAVLOK_NAME` / `PAVLOK_NAME_2` (`Watch 1` / `Watch 2`) - default names for the watches
+  * `PAVLOK_TIMEZONE` (server time zone) - time zone for alarm schedules, such as `America/Chicago`. It can also be set on the Pavlok admin screen, which takes priority once saved.
   * `PAVLOK_API_URL` (`https://api.pavlok.com/api/v5/stimulus/send`) - Pavlok stimulus endpoint
   * `PAVLOK_URGENT_LOW_COOLDOWN` (`5`) - minutes before another urgent low zap
   * `PAVLOK_LOW_COOLDOWN` (`10`) - minutes before another low zap
@@ -847,7 +850,7 @@ When APNs provides no failure details, the message says so. Unexpected failures 
   * `PAVLOK_NO_DATA_COOLDOWN` (`30`) - minutes before another no CGM data (warning) vibration
   * `PAVLOK_URGENT_NO_DATA_COOLDOWN` (`30`) - minutes before another urgent no CGM data vibration
 
-  Admins can send a test zap, vibration or beep at any strength from **Pavlok Watch** in the menu (this opens the Pavlok section of Admin Tools).
+  Admins can manage the watches from **Pavlok Watch** in the menu (this opens the Pavlok section of Admin Tools). For each watch you can turn all alarms off, pause it for 30 minutes to 24 hours (it resumes on its own), turn individual alarms off, change each alarm's strength, limit each alarm to certain hours and days (a window like 22:00 to 07:00 runs overnight), and rename it. Settings are saved in the `pavlok_settings` collection and survive restarts. The same screen sends a test zap, vibration or beep at any strength to one watch or both; tests work even while a watch is paused or off.
 
   The same screen has a **Pavlok alarm log** showing how many times each alarm has triggered the watch (last 24 hours, 7 days, 30 days and total, plus failed sends) and the most recent triggers. Log entries are stored in the `pavlok_log` collection and kept for 365 days. Manual tests are not counted.
 
