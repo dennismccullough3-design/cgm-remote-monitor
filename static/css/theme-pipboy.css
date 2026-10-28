@@ -1,0 +1,410 @@
+/*
+ * "Pip-Boy" retro terminal theme.
+ *
+ * Restyles the existing page only: every rule is scoped to body.theme-pipboy
+ * (added when the theme is picked in Settings), no markup changes. Warning
+ * and urgent states keep amber and red so out-of-range readings and alarms
+ * stay distinct from the green-on-black look.
+ */
+
+body.theme-pipboy {
+  --pip-green: #3dff7a;
+  --pip-green-dim: #1f9e4a;
+  --pip-green-faint: rgba(61, 255, 122, 0.14);
+  --pip-bg: #020c05;
+  --pip-panel: #04170a;
+  --pip-amber: #ffc23d;
+  --pip-red: #ff4f3f;
+  --pip-glow: 0 0 4px rgba(61, 255, 122, 0.75), 0 0 12px rgba(61, 255, 122, 0.35);
+  --pip-font: 'Share Tech Mono', 'Consolas', 'DejaVu Sans Mono', 'Courier New', monospace;
+
+  background: radial-gradient(ellipse at center, #062611 0%, var(--pip-bg) 70%) fixed;
+  color: var(--pip-green);
+  font-family: var(--pip-font);
+  text-shadow: 0 0 3px rgba(61, 255, 122, 0.45);
+}
+
+/* CRT scanlines and vignette; never intercept clicks */
+body.theme-pipboy::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9999;
+  background:
+    repeating-linear-gradient(to bottom, rgba(0, 0, 0, 0) 0, rgba(0, 0, 0, 0) 2px, rgba(0, 0, 0, 0.22) 3px),
+    radial-gradient(ellipse at center, rgba(0, 0, 0, 0) 60%, rgba(0, 0, 0, 0.55) 100%);
+}
+
+body.theme-pipboy .primary,
+body.theme-pipboy #toolbar .customTitle,
+body.theme-pipboy #drawer,
+body.theme-pipboy #treatmentDrawer,
+body.theme-pipboy #boluscalcDrawer,
+body.theme-pipboy input,
+body.theme-pipboy select,
+body.theme-pipboy button,
+body.theme-pipboy textarea {
+  font-family: inherit;
+}
+
+/* top bar */
+body.theme-pipboy #toolbar {
+  background: linear-gradient(to bottom, #07240f, #041509);
+  border-bottom: 2px solid var(--pip-green-dim);
+  box-shadow: 0 0 14px rgba(61, 255, 122, 0.25);
+}
+
+body.theme-pipboy #toolbar .customTitle {
+  color: var(--pip-green);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  text-shadow: var(--pip-glow);
+}
+
+body.theme-pipboy #toolbar a,
+body.theme-pipboy #toolbar i,
+body.theme-pipboy #buttonbar a {
+  color: var(--pip-green);
+  text-shadow: var(--pip-glow);
+}
+
+/* clock, glucose and status pills */
+body.theme-pipboy #currentTime,
+body.theme-pipboy .bgButton,
+body.theme-pipboy .bgStatus .currentBG,
+body.theme-pipboy .pill.direction {
+  color: var(--pip-green);
+  text-shadow: var(--pip-glow);
+}
+
+body.theme-pipboy .bgButton {
+  border-color: transparent;
+}
+
+body.theme-pipboy .bgButton .pill.direction {
+  background: transparent;
+  border-color: transparent;
+  box-shadow: none;
+}
+
+body.theme-pipboy .inrange .bgButton,
+body.theme-pipboy .inrange .currentBG,
+body.theme-pipboy .inrange .pill.direction {
+  color: var(--pip-green);
+}
+
+body.theme-pipboy .warning .bgButton,
+body.theme-pipboy .warning .currentBG,
+body.theme-pipboy .warning .pill.direction {
+  color: var(--pip-amber);
+  text-shadow: 0 0 6px rgba(255, 194, 61, 0.7);
+}
+
+body.theme-pipboy .urgent .bgButton,
+body.theme-pipboy .urgent .currentBG,
+body.theme-pipboy .urgent .pill.direction {
+  color: var(--pip-red);
+  text-shadow: 0 0 6px rgba(255, 79, 63, 0.8);
+}
+
+/* alarms keep their solid amber/red backgrounds so they cannot be missed */
+body.theme-pipboy .alarming .bgButton,
+body.theme-pipboy .alarming .bgButton .currentBG,
+body.theme-pipboy .alarming .bgButton .pill.direction {
+  color: #000;
+  text-shadow: none;
+}
+
+body.theme-pipboy .alarming.warning .bgButton {
+  background-color: var(--pip-amber);
+  border-color: var(--pip-amber);
+  box-shadow: 0 0 18px rgba(255, 194, 61, 0.8);
+}
+
+body.theme-pipboy .alarming.urgent .bgButton {
+  background-color: var(--pip-red);
+  border-color: var(--pip-red);
+  box-shadow: 0 0 18px rgba(255, 79, 63, 0.9);
+}
+
+body.theme-pipboy .pill {
+  background: transparent;
+  border: 1px solid var(--pip-green-dim);
+  border-radius: 2px;
+  box-shadow: inset 0 0 6px rgba(61, 255, 122, 0.15);
+}
+
+body.theme-pipboy .pill:hover {
+  background: var(--pip-green-faint);
+}
+
+body.theme-pipboy .pill em {
+  background: var(--pip-green);
+  color: var(--pip-bg);
+  border-radius: 1px;
+  text-shadow: none;
+}
+
+body.theme-pipboy .pill label,
+body.theme-pipboy .statusPills .pill em {
+  color: var(--pip-green);
+}
+
+body.theme-pipboy .statusPills .pill em {
+  background: transparent;
+}
+
+body.theme-pipboy .container .pill.warn em,
+body.theme-pipboy .alarming-timeago .timeago.pill.warn {
+  background: var(--pip-amber);
+  border-color: var(--pip-amber);
+  color: #000;
+}
+
+body.theme-pipboy .container .pill.urgent em,
+body.theme-pipboy .alarming-timeago .timeago.pill.urgent {
+  background: var(--pip-red);
+  border-color: var(--pip-red);
+  color: #000;
+}
+
+body.theme-pipboy .alarming-timeago .timeago.pill label {
+  color: #000;
+}
+
+body.theme-pipboy .focus-range li,
+body.theme-pipboy .focus-range {
+  color: var(--pip-green-dim);
+}
+
+body.theme-pipboy .focus-range li.selected {
+  background: var(--pip-green);
+  color: var(--pip-bg);
+}
+
+/* chart */
+body.theme-pipboy #chartContainer {
+  background:
+    linear-gradient(rgba(61, 255, 122, 0.05) 1px, transparent 1px) 0 0 / 100% 40px,
+    linear-gradient(90deg, rgba(61, 255, 122, 0.05) 1px, transparent 1px) 0 0 / 40px 100%,
+    var(--pip-panel);
+  border: 1px solid var(--pip-green-dim);
+  box-shadow: inset 0 0 30px rgba(0, 0, 0, 0.7), 0 0 12px rgba(61, 255, 122, 0.2);
+}
+
+body.theme-pipboy #chartContainer text,
+body.theme-pipboy #chartContainer .axis {
+  fill: var(--pip-green);
+  font-family: var(--pip-font);
+}
+
+body.theme-pipboy #chartContainer .tick line,
+body.theme-pipboy #chartContainer .domain,
+body.theme-pipboy #chartContainer line[stroke="grey"],
+body.theme-pipboy #chartContainer line[stroke="#777"] {
+  stroke: var(--pip-green-dim);
+}
+
+body.theme-pipboy #chartContainer line[stroke="white"],
+body.theme-pipboy #chartContainer path[stroke="white"] {
+  stroke: var(--pip-green);
+}
+
+/* settings, care portal and other drawers */
+body.theme-pipboy #drawer,
+body.theme-pipboy .drawer,
+body.theme-pipboy #treatmentDrawer,
+body.theme-pipboy #boluscalcDrawer {
+  background: var(--pip-panel);
+  color: var(--pip-green);
+  border-left: 2px solid var(--pip-green-dim);
+  box-shadow: -6px 0 18px rgba(61, 255, 122, 0.2);
+}
+
+body.theme-pipboy #drawer a,
+body.theme-pipboy .drawer a,
+body.theme-pipboy #drawer legend,
+body.theme-pipboy #drawer dt {
+  color: var(--pip-green);
+}
+
+body.theme-pipboy .navigation a {
+  background: transparent;
+  border: 1px solid var(--pip-green-dim);
+  color: var(--pip-green);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+body.theme-pipboy .navigation a:hover,
+body.theme-pipboy .navigation a.multilink:hover {
+  background: var(--pip-green);
+  color: var(--pip-bg);
+  text-shadow: none;
+}
+
+body.theme-pipboy .navigation li.multilink a:first-child {
+  border-color: transparent;
+}
+
+/* the monospace font is wider, so keep long dropdowns inside the drawer */
+body.theme-pipboy #drawer select {
+  max-width: 290px;
+}
+
+body.theme-pipboy a {
+  color: var(--pip-green);
+}
+
+/* jQuery UI dialogs, e.g. Device authentication */
+body.theme-pipboy .ui-dialog,
+body.theme-pipboy .ui-widget-content {
+  background: var(--pip-panel);
+  color: var(--pip-green);
+  border: 1px solid var(--pip-green-dim);
+  font-family: var(--pip-font);
+}
+
+body.theme-pipboy .ui-dialog {
+  box-shadow: 0 0 24px rgba(61, 255, 122, 0.3);
+}
+
+body.theme-pipboy .ui-widget-header {
+  background: #07240f;
+  color: var(--pip-green);
+  border: 1px solid var(--pip-green-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+body.theme-pipboy .ui-dialog .ui-dialog-buttonpane {
+  background: transparent;
+  border-top-color: var(--pip-green-dim);
+}
+
+body.theme-pipboy .ui-widget-overlay {
+  background: #000;
+  opacity: 0.7;
+}
+
+body.theme-pipboy fieldset {
+  border-color: var(--pip-green-dim);
+}
+
+body.theme-pipboy input,
+body.theme-pipboy select,
+body.theme-pipboy textarea {
+  background: #000;
+  color: var(--pip-green);
+  border: 1px solid var(--pip-green-dim);
+}
+
+body.theme-pipboy input[type="radio"],
+body.theme-pipboy input[type="checkbox"] {
+  accent-color: var(--pip-green);
+}
+
+body.theme-pipboy button,
+body.theme-pipboy .button,
+body.theme-pipboy input[type="button"],
+body.theme-pipboy input[type="submit"],
+body.theme-pipboy .adminButton {
+  background: transparent;
+  color: var(--pip-green);
+  border: 1px solid var(--pip-green);
+  text-shadow: var(--pip-glow);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+body.theme-pipboy button:hover,
+body.theme-pipboy .button:hover,
+body.theme-pipboy .adminButton:hover {
+  background: var(--pip-green);
+  color: var(--pip-bg);
+  text-shadow: none;
+}
+
+body.theme-pipboy .dropdown-menu,
+body.theme-pipboy #silenceBtn,
+body.theme-pipboy #viewMenu {
+  background: var(--pip-panel);
+  border-color: var(--pip-green-dim);
+}
+
+body.theme-pipboy .dropdown-menu a {
+  color: var(--pip-green);
+}
+
+body.theme-pipboy .tooltip {
+  background: var(--pip-panel);
+  color: var(--pip-green);
+  border: 1px solid var(--pip-green-dim);
+}
+
+/* Admin Tools (including the Pavlok screen) */
+body.theme-pipboy #admin_placeholder fieldset {
+  background: rgba(4, 23, 10, 0.85);
+}
+
+body.theme-pipboy #admin_placeholder button {
+  background: transparent;
+  color: var(--pip-green);
+  border: 2px solid var(--pip-green);
+  border-radius: 2px;
+  box-shadow: 0 0 8px rgba(61, 255, 122, 0.3);
+  text-shadow: var(--pip-glow);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+body.theme-pipboy #admin_placeholder button:hover {
+  background: var(--pip-green);
+  color: var(--pip-bg);
+  text-shadow: none;
+}
+
+body.theme-pipboy input[type="range"] {
+  accent-color: var(--pip-green);
+  background: transparent;
+  border: none;
+}
+
+body.theme-pipboy #admin_placeholder legend {
+  color: var(--pip-green);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+body.theme-pipboy .pavlok-watch,
+body.theme-pipboy .pavlok-alarms th,
+body.theme-pipboy .pavlok-alarms td,
+body.theme-pipboy .pavlok-log th,
+body.theme-pipboy .pavlok-log td {
+  border-color: var(--pip-green-dim);
+}
+
+body.theme-pipboy .pavlok-warning,
+body.theme-pipboy .pavlok-log .failed {
+  color: var(--pip-red);
+  text-shadow: 0 0 6px rgba(255, 79, 63, 0.7);
+}
+
+body.theme-pipboy .pavlok-inactive {
+  color: var(--pip-amber);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  body.theme-pipboy #currentTime,
+  body.theme-pipboy .bgButton {
+    animation: pipboy-flicker 6s infinite;
+  }
+}
+
+@keyframes pipboy-flicker {
+  0%, 96%, 100% { opacity: 1; }
+  97% { opacity: 0.86; }
+  98% { opacity: 1; }
+  99% { opacity: 0.92; }
+}
