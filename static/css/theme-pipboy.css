@@ -15,8 +15,11 @@
 
 body.theme-pipboy {
   --pip-green: #00bf63;
+  --pip-rgb: 0, 191, 99;
+  --pip-hi-rgb: 140, 255, 185;
+  --pip-tint: #021a0c;
   --pip-green-dim: #00733b;
-  --pip-green-faint: rgba(0, 191, 99, 0.12);
+  --pip-green-faint: rgba(var(--pip-rgb), 0.12);
   --pip-slate: #32586f;
   --pip-slate-dark: #183c52;
   --pip-ink: #081920;
@@ -422,10 +425,10 @@ body.theme-pipboy .pavlok-inactive {
  */
 
 body.theme-pipboycrt {
-  --pip-glow: 0 0 3px rgba(0, 191, 99, 0.8), 0 0 10px rgba(0, 191, 99, 0.35);
+  --pip-glow: 0 0 3px rgba(var(--pip-rgb), 0.8), 0 0 10px rgba(var(--pip-rgb), 0.35);
   /* keep a solid colour under the gradient: iPhones fill the notch side
      areas in landscape with the background colour, not the gradient */
-  background: #000 radial-gradient(ellipse at center, #021a0c 0%, #000 75%) fixed;
+  background: #000 radial-gradient(ellipse at center, var(--pip-tint) 0%, #000 75%) fixed;
   text-shadow: var(--pip-glow);
 }
 
@@ -456,13 +459,13 @@ body.theme-pipboycrt::after {
     z-index: 9998;
     /* moving down: long faint trail on top, brightest at the leading edge */
     background: linear-gradient(to bottom,
-      rgba(0, 191, 99, 0) 0%,
-      rgba(0, 191, 99, 0.025) 35%,
-      rgba(0, 191, 99, 0.06) 65%,
-      rgba(0, 191, 99, 0.11) 85%,
-      rgba(140, 255, 185, 0.20) 95%,
-      rgba(140, 255, 185, 0.06) 98%,
-      rgba(0, 191, 99, 0) 100%);
+      rgba(var(--pip-rgb), 0) 0%,
+      rgba(var(--pip-rgb), 0.025) 35%,
+      rgba(var(--pip-rgb), 0.06) 65%,
+      rgba(var(--pip-rgb), 0.11) 85%,
+      rgba(var(--pip-hi-rgb), 0.20) 95%,
+      rgba(var(--pip-hi-rgb), 0.06) 98%,
+      rgba(var(--pip-rgb), 0) 100%);
     transform: translateY(-42vh);
     animation: pipboy-scan-roll 11s linear infinite;
     will-change: transform;
@@ -477,19 +480,19 @@ body.theme-pipboycrt::after {
 }
 
 body.theme-pipboycrt #container {
-  box-shadow: inset 0 0 0 3px var(--pip-green), 0 0 12px rgba(0, 191, 99, 0.35), inset 0 0 18px rgba(0, 191, 99, 0.15);
+  box-shadow: inset 0 0 0 3px var(--pip-green), 0 0 12px rgba(var(--pip-rgb), 0.35), inset 0 0 18px rgba(var(--pip-rgb), 0.15);
 }
 
 body.theme-pipboycrt #chartContainer {
-  box-shadow: inset 0 0 0 2px var(--pip-green), 0 0 10px rgba(0, 191, 99, 0.3), inset 0 0 24px rgba(0, 191, 99, 0.12);
+  box-shadow: inset 0 0 0 2px var(--pip-green), 0 0 10px rgba(var(--pip-rgb), 0.3), inset 0 0 24px rgba(var(--pip-rgb), 0.12);
 }
 
 body.theme-pipboycrt #toolbar {
-  box-shadow: 0 0 12px rgba(0, 191, 99, 0.35);
+  box-shadow: 0 0 12px rgba(var(--pip-rgb), 0.35);
 }
 
 body.theme-pipboycrt #chartContainer svg {
-  filter: drop-shadow(0 0 2px rgba(0, 191, 99, 0.55));
+  filter: drop-shadow(0 0 2px rgba(var(--pip-rgb), 0.55));
 }
 
 body.theme-pipboycrt .statusBox,
@@ -499,7 +502,7 @@ body.theme-pipboycrt button,
 body.theme-pipboycrt .navigation a,
 body.theme-pipboycrt #admin_placeholder button,
 body.theme-pipboycrt fieldset {
-  box-shadow: 0 0 8px rgba(0, 191, 99, 0.35);
+  box-shadow: 0 0 8px rgba(var(--pip-rgb), 0.35);
 }
 
 /* filled green areas and coloured warnings get their own glow, not green text glow */
@@ -509,7 +512,7 @@ body.theme-pipboycrt .pill em,
 body.theme-pipboycrt .focus-range li.selected,
 body.theme-pipboycrt .ui-widget-header {
   text-shadow: none;
-  box-shadow: 0 0 10px rgba(0, 191, 99, 0.45);
+  box-shadow: 0 0 10px rgba(var(--pip-rgb), 0.45);
 }
 
 body.theme-pipboycrt .warning .bgButton,
@@ -552,4 +555,21 @@ body.theme-pipboycrt textarea {
   body.theme-pipboycrt .statusBox {
     box-shadow: none;
   }
+}
+
+/*
+ * "Amber terminal": the Pip-Boy CRT design recoloured to a 1980s amber
+ * monitor (the page gets theme-pipboy and theme-pipboycrt too). Warnings use
+ * a pale yellow-white so they stand apart from the amber text.
+ */
+body.theme-amber {
+  --pip-green: #ffb000;
+  --pip-rgb: 255, 176, 0;
+  --pip-hi-rgb: 255, 222, 150;
+  --pip-tint: #1c1000;
+  --pip-green-dim: #8a5f00;
+  --pip-green-faint: rgba(255, 176, 0, 0.12);
+  --pip-slate: #4a2c00;
+  --pip-ink: #1a0f00;
+  --pip-amber: #fff2b0;
 }

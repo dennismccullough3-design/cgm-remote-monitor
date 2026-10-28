@@ -1,0 +1,1124 @@
+@import url('https://fonts.googleapis.com/css2?family=Antonio:wght@500;700&family=Atkinson+Hyperlegible:wght@400;700&family=B612+Mono:wght@400;700&family=Bebas+Neue&family=IBM+Plex+Serif:wght@400;600&family=Inter:wght@400;600&family=Orbitron:wght@500;700&family=Press+Start+2P&family=Share+Tech+Mono&family=VT323&display=swap');
+
+/*
+ * Extra themes picked in Settings > Theme: night, highcontrast, light, kiosk,
+ * vaulttec, synthwave, lcars, cockpit, matrix, gameboy and paper.
+ *
+ * Restyles the existing page only. The page gets theme-extra plus
+ * theme-<name>; the shared rules below are driven by the variables each
+ * theme sets, and each theme section adds its own touches. Boxes use
+ * outlines and inset shadows where a border would change sizes the chart
+ * layout depends on. Alarm boxes always keep a solid warning/urgent colour.
+ */
+
+/* ------------------------------------------------------------------ */
+/* shared base                                                         */
+/* ------------------------------------------------------------------ */
+
+body.theme-extra {
+  --t-bg: #000;
+  --t-fg: #ddd;
+  --t-muted: #999;
+  --t-accent: #888;
+  --t-accent-ink: #000;
+  --t-panel: #111;
+  --t-chart-bg: #111;
+  --t-grid: #555;
+  --t-line: #ddd;
+  --t-forecast: cyan;
+  --t-basal: #0099ff;
+  --t-in: #4cff00;
+  --t-warn: #ffd400;
+  --t-urgent: #ff3b3b;
+  --t-alarm-ink: #000;
+  --t-alarm-ink-warn: #000;
+  --t-font: 'Ubuntu', sans-serif;
+  --t-number-font: var(--t-font);
+  --t-title-font: var(--t-font);
+  --t-radius: 4px;
+  --t-border: 2px;
+
+  background-color: var(--t-bg);
+  color: var(--t-fg);
+  font-family: var(--t-font);
+}
+
+body.theme-extra .primary,
+body.theme-extra #drawer,
+body.theme-extra #treatmentDrawer,
+body.theme-extra #boluscalcDrawer,
+body.theme-extra input,
+body.theme-extra select,
+body.theme-extra button,
+body.theme-extra textarea {
+  font-family: var(--t-font);
+}
+
+/* top bar */
+body.theme-extra #toolbar {
+  background: var(--t-panel);
+  border-bottom: var(--t-border) solid var(--t-accent);
+}
+
+body.theme-extra #toolbar .customTitle {
+  color: var(--t-fg);
+  font-family: var(--t-title-font);
+}
+
+body.theme-extra #toolbar a,
+body.theme-extra #toolbar i,
+body.theme-extra #buttonbar a {
+  color: var(--t-fg);
+}
+
+/* the title takes the theme's warning/urgent colour during alarms */
+body.theme-extra #container.alarming.warning .customTitle {
+  color: var(--t-warn);
+}
+
+body.theme-extra #container.alarming.urgent .customTitle {
+  color: var(--t-urgent);
+}
+
+/* clock and glucose */
+body.theme-extra #currentTime {
+  color: var(--t-fg);
+  font-family: var(--t-number-font);
+}
+
+body.theme-extra .bgButton,
+body.theme-extra .bgStatus .currentBG,
+body.theme-extra .bgButton .pill.direction {
+  color: var(--t-fg);
+  font-family: var(--t-number-font);
+}
+
+body.theme-extra .bgButton {
+  border-color: transparent;
+  border-radius: var(--t-radius);
+}
+
+body.theme-extra .bgButton .pill.direction {
+  background: transparent;
+  border-color: transparent;
+}
+
+body.theme-extra .inrange .bgButton,
+body.theme-extra .inrange .currentBG,
+body.theme-extra .inrange .bgButton .pill.direction {
+  color: var(--t-in);
+}
+
+body.theme-extra .warning .bgButton,
+body.theme-extra .warning .currentBG,
+body.theme-extra .warning .bgButton .pill.direction {
+  color: var(--t-warn);
+}
+
+body.theme-extra .urgent .bgButton,
+body.theme-extra .urgent .currentBG,
+body.theme-extra .urgent .bgButton .pill.direction {
+  color: var(--t-urgent);
+}
+
+/* alarms: solid warning/urgent box in every theme; warnings always use dark
+   text, urgent boxes use the theme's --t-alarm-ink */
+body.theme-extra .alarming .bgButton,
+body.theme-extra .alarming .bgButton .currentBG,
+body.theme-extra .alarming .bgButton .pill.direction {
+  text-shadow: none;
+}
+
+body.theme-extra .alarming.warning .bgButton,
+body.theme-extra .alarming.warning .bgButton .currentBG,
+body.theme-extra .alarming.warning .bgButton .pill.direction {
+  color: var(--t-alarm-ink-warn);
+}
+
+body.theme-extra .alarming.urgent .bgButton,
+body.theme-extra .alarming.urgent .bgButton .currentBG,
+body.theme-extra .alarming.urgent .bgButton .pill.direction {
+  color: var(--t-alarm-ink);
+}
+
+body.theme-extra .alarming.warning .bgButton {
+  background-color: var(--t-warn);
+  border-color: var(--t-warn);
+}
+
+body.theme-extra .alarming.urgent .bgButton {
+  background-color: var(--t-urgent);
+  border-color: var(--t-urgent);
+}
+
+/* pills */
+body.theme-extra .pill {
+  background: var(--t-accent);
+  border-color: var(--t-accent);
+  border-radius: var(--t-radius);
+}
+
+body.theme-extra .pill:hover {
+  filter: brightness(1.15);
+}
+
+body.theme-extra .pill em,
+body.theme-extra .statusPills .pill em {
+  background: var(--t-bg);
+  color: var(--t-fg);
+  border-radius: calc(var(--t-radius) * 0.6);
+}
+
+body.theme-extra .pill label {
+  color: var(--t-accent-ink);
+}
+
+body.theme-extra .container .pill.warn em,
+body.theme-extra .alarming-timeago .timeago.pill.warn {
+  background: var(--t-warn);
+  border-color: var(--t-warn);
+  color: var(--t-alarm-ink);
+}
+
+body.theme-extra .container .pill.urgent em,
+body.theme-extra .alarming-timeago .timeago.pill.urgent {
+  background: var(--t-urgent);
+  border-color: var(--t-urgent);
+  color: var(--t-alarm-ink);
+}
+
+body.theme-extra .alarming-timeago .timeago.pill label {
+  color: var(--t-alarm-ink);
+}
+
+/* chart range selector */
+body.theme-extra .focus-range,
+body.theme-extra .focus-range li {
+  color: var(--t-muted);
+}
+
+/* Nightscout spaces these with a black border, which shows on light pages */
+body.theme-extra .focus-range li {
+  border-color: transparent;
+}
+
+body.theme-extra .focus-range li:hover {
+  border-color: var(--t-accent);
+}
+
+body.theme-extra .focus-range li.selected {
+  background: var(--t-accent);
+  border-color: var(--t-accent);
+  color: var(--t-accent-ink);
+  border-radius: var(--t-radius);
+}
+
+/* chart */
+body.theme-extra #chartContainer {
+  background: var(--t-chart-bg);
+}
+
+body.theme-extra #chartContainer text,
+body.theme-extra #chartContainer .axis {
+  fill: var(--t-fg);
+  font-family: var(--t-font);
+}
+
+body.theme-extra #chartContainer .tick line,
+body.theme-extra #chartContainer .domain,
+body.theme-extra #chartContainer line[stroke="grey"],
+body.theme-extra #chartContainer line[stroke="#777"] {
+  stroke: var(--t-grid);
+}
+
+body.theme-extra #chartContainer line[stroke="white"],
+body.theme-extra #chartContainer path[stroke="white"],
+body.theme-extra #chartContainer circle[stroke="white"] {
+  stroke: var(--t-line);
+}
+
+/* the chart's zoom selection box is drawn grey with a white outline */
+body.theme-extra #chartContainer .x.brush .selection {
+  fill: var(--t-grid);
+  fill-opacity: 0.25;
+  stroke: var(--t-accent);
+}
+
+/* AR2 forecast dots are cyan; other forecasts keep their own colours */
+body.theme-extra #chartContainer circle.forecast-dot[stroke="cyan"] {
+  stroke: var(--t-forecast);
+}
+
+body.theme-extra #chartContainer path[stroke="#0099ff"] {
+  stroke: var(--t-basal);
+}
+
+body.theme-extra #chartContainer path[fill="#0099ff"] {
+  fill: var(--t-basal);
+}
+
+/* drawers, menus and dialogs */
+body.theme-extra #drawer,
+body.theme-extra .drawer,
+body.theme-extra #treatmentDrawer,
+body.theme-extra #boluscalcDrawer {
+  background: var(--t-panel);
+  color: var(--t-fg);
+  border-left: var(--t-border) solid var(--t-accent);
+  box-shadow: none;
+}
+
+body.theme-extra a,
+body.theme-extra #drawer a,
+body.theme-extra .drawer a,
+body.theme-extra #drawer dt {
+  color: var(--t-fg);
+}
+
+body.theme-extra .navigation a,
+body.theme-extra button,
+body.theme-extra .button,
+body.theme-extra input[type="button"],
+body.theme-extra input[type="submit"],
+body.theme-extra #admin_placeholder button {
+  background: var(--t-accent);
+  color: var(--t-accent-ink);
+  border: var(--t-border) solid var(--t-accent);
+  border-radius: var(--t-radius);
+  box-shadow: none;
+}
+
+body.theme-extra .navigation a:hover,
+body.theme-extra button:hover,
+body.theme-extra .button:hover,
+body.theme-extra #admin_placeholder button:hover {
+  filter: brightness(1.15);
+}
+
+/* menu buttons in the drawer use the button text colour, not the link colour */
+body.theme-extra #drawer .navigation a {
+  color: var(--t-accent-ink);
+}
+
+body.theme-extra #drawer .navigation li.multilink a:first-child,
+body.theme-extra .navigation li.multilink a:first-child {
+  background: transparent;
+  border-color: transparent;
+  color: var(--t-fg);
+}
+
+body.theme-extra fieldset {
+  border: var(--t-border) solid var(--t-accent);
+  border-radius: var(--t-radius);
+}
+
+body.theme-extra legend {
+  background: var(--t-accent);
+  color: var(--t-accent-ink);
+  border-radius: var(--t-radius);
+  padding: 2px 10px;
+  font-family: var(--t-title-font);
+}
+
+body.theme-extra legend * {
+  color: var(--t-accent-ink);
+}
+
+body.theme-extra input,
+body.theme-extra select,
+body.theme-extra textarea {
+  background: var(--t-bg);
+  color: var(--t-fg);
+  border: 1px solid var(--t-accent);
+  border-radius: calc(var(--t-radius) * 0.5);
+}
+
+body.theme-extra input[type="radio"],
+body.theme-extra input[type="checkbox"],
+body.theme-extra input[type="range"] {
+  accent-color: var(--t-accent);
+}
+
+body.theme-extra input[type="range"] {
+  background: transparent;
+  border: none;
+}
+
+body.theme-extra #drawer select {
+  max-width: 290px;
+}
+
+body.theme-extra .dropdown-menu,
+body.theme-extra #silenceBtn,
+body.theme-extra #viewMenu,
+body.theme-extra .tooltip {
+  background: var(--t-panel);
+  color: var(--t-fg);
+  border: var(--t-border) solid var(--t-accent);
+  border-radius: var(--t-radius);
+}
+
+body.theme-extra .dropdown-menu a {
+  color: var(--t-fg);
+}
+
+body.theme-extra .ui-dialog,
+body.theme-extra .ui-widget-content {
+  background: var(--t-panel);
+  color: var(--t-fg);
+  border: var(--t-border) solid var(--t-accent);
+  border-radius: var(--t-radius);
+  font-family: var(--t-font);
+}
+
+body.theme-extra .ui-widget-header {
+  background: var(--t-accent);
+  color: var(--t-accent-ink);
+  border: none;
+  border-radius: var(--t-radius);
+  font-family: var(--t-title-font);
+}
+
+body.theme-extra .ui-dialog .ui-dialog-buttonpane {
+  background: transparent;
+  border-top: 1px solid var(--t-accent);
+}
+
+/* Admin Tools (including the Pavlok screen) */
+body.theme-extra #admin_placeholder fieldset {
+  background: var(--t-panel);
+}
+
+body.theme-extra #admin_placeholder hr {
+  border: none;
+  border-top: 1px solid var(--t-grid);
+}
+
+body.theme-extra .pavlok-watch {
+  border: var(--t-border) solid var(--t-accent);
+  border-radius: var(--t-radius);
+}
+
+body.theme-extra .pavlok-alarms th,
+body.theme-extra .pavlok-log th {
+  background: var(--t-accent);
+  color: var(--t-accent-ink);
+  border-color: var(--t-accent);
+}
+
+body.theme-extra .pavlok-alarms td,
+body.theme-extra .pavlok-log td {
+  border-color: var(--t-grid);
+}
+
+body.theme-extra .pavlok-warning,
+body.theme-extra .pavlok-log .failed {
+  color: var(--t-urgent);
+}
+
+body.theme-extra .pavlok-inactive {
+  color: var(--t-warn);
+}
+
+/* compact layouts squeeze the clock row, so leave it unboxed there */
+@media (max-width: 750px), (max-height: 480px) {
+  /* more specific than the per-theme box rules further down */
+  body.theme-extra .status .statusBox {
+    outline: none;
+    box-shadow: none;
+  }
+}
+
+/* ------------------------------------------------------------------ */
+/* Night: dim red for the bedside; alarms still turn the box bright    */
+/* ------------------------------------------------------------------ */
+
+body.theme-night {
+  --t-forecast: #7a4f1e;
+  --t-basal: #3d1a10;
+  --t-bg: #000;
+  /* dim, but kept at about 3:1 contrast so it stays readable */
+  --t-fg: #a8341d;
+  --t-muted: #5a1a0e;
+  --t-accent: #3d1209;
+  --t-accent-ink: #c8492f;
+  --t-panel: #050101;
+  --t-chart-bg: #000;
+  --t-grid: #2a0b05;
+  --t-line: #5a1a0e;
+  --t-in: #b8402a;
+  --t-warn: #e3a13a;
+  --t-urgent: #ff3b3b;
+  --t-border: 1px;
+}
+
+body.theme-night .pill em,
+body.theme-night .statusPills .pill em {
+  color: #b8402a;
+}
+
+body.theme-night #chartContainer text {
+  fill: #6e2213;
+}
+
+body.theme-night #toolbar a,
+body.theme-night #toolbar i {
+  color: #5a1a0e;
+}
+
+/* ------------------------------------------------------------------ */
+/* High contrast: large, bold, white on black with yellow accents      */
+/* ------------------------------------------------------------------ */
+
+body.theme-highcontrast {
+  --t-bg: #000;
+  --t-fg: #fff;
+  --t-muted: #fff;
+  --t-accent: #ffd400;
+  --t-accent-ink: #000;
+  --t-panel: #000;
+  --t-chart-bg: #000;
+  --t-grid: #8a8a8a;
+  --t-line: #fff;
+  --t-in: #fff;
+  --t-warn: #ffd400;
+  --t-urgent: #ff3b3b;
+  --t-font: 'Atkinson Hyperlegible', Verdana, sans-serif;
+  --t-radius: 0;
+  --t-border: 3px;
+
+  font-weight: 700;
+}
+
+body.theme-highcontrast .bgButton {
+  outline: 3px solid #fff;
+  outline-offset: 2px;
+  /* room for the ! / !! marker next to the number and arrow */
+  width: auto;
+  min-width: 360px;
+  padding: 0 0.1em;
+}
+
+body.theme-highcontrast .warning .bgButton {
+  outline-color: var(--t-warn);
+}
+
+body.theme-highcontrast .urgent .bgButton {
+  outline-color: var(--t-urgent);
+}
+
+/* out-of-range readings are also marked with a symbol, not only colour */
+body.theme-highcontrast .warning .bgButton .currentBG::after {
+  content: ' !';
+}
+
+body.theme-highcontrast .urgent .bgButton .currentBG::after {
+  content: ' !!';
+}
+
+body.theme-highcontrast .pill {
+  border-width: 3px;
+}
+
+body.theme-highcontrast #chartContainer {
+  box-shadow: inset 0 0 0 3px #fff;
+}
+
+body.theme-highcontrast #chartContainer text {
+  font-weight: 700;
+}
+
+body.theme-highcontrast a {
+  text-decoration: underline;
+}
+
+/* ------------------------------------------------------------------ */
+/* Light: dark text on a light background for bright rooms             */
+/* ------------------------------------------------------------------ */
+
+body.theme-light {
+  --t-forecast: #0a7ea4;
+  --t-basal: #0969da;
+  --t-bg: #f6f8fa;
+  --t-fg: #1f2328;
+  --t-muted: #59636e;
+  --t-accent: #0969da;
+  --t-accent-ink: #fff;
+  --t-panel: #fff;
+  --t-chart-bg: #fff;
+  --t-grid: #d0d7de;
+  --t-line: #1f2328;
+  --t-in: #1a7f37;
+  --t-warn: #b76e00;
+  --t-urgent: #cf222e;
+  --t-alarm-ink: #fff;
+  --t-font: 'Inter', 'Segoe UI', sans-serif;
+  --t-radius: 6px;
+  --t-border: 1px;
+}
+
+body.theme-light #toolbar {
+  box-shadow: 0 1px 3px rgba(31, 35, 40, 0.12);
+}
+
+body.theme-light .pill em,
+body.theme-light .statusPills .pill em {
+  background: #fff;
+  color: #1f2328;
+}
+
+body.theme-light #chartContainer {
+  box-shadow: inset 0 0 0 1px #d0d7de;
+}
+
+
+/* ------------------------------------------------------------------ */
+/* Kiosk: the reading fills the screen, for a tablet or wall display   */
+/* ------------------------------------------------------------------ */
+
+body.theme-kiosk {
+  --t-bg: #000;
+  --t-fg: #e6e6e6;
+  --t-muted: #777;
+  --t-accent: #2a2a2a;
+  --t-accent-ink: #bbb;
+  --t-panel: #000;
+  --t-chart-bg: #050505;
+  --t-grid: #262626;
+  --t-line: #888;
+  --t-in: #4cff00;
+  --t-warn: #ffd400;
+  --t-urgent: #ff3b3b;
+  --t-border: 1px;
+}
+
+body.theme-kiosk #toolbar {
+  opacity: 0.35;
+  transition: opacity 0.3s;
+}
+
+body.theme-kiosk #toolbar:hover,
+body.theme-kiosk #toolbar:focus-within {
+  opacity: 1;
+}
+
+body.theme-kiosk .bgButton {
+  width: auto;
+  padding: 0 0.15em;
+  white-space: nowrap;
+}
+
+body.theme-kiosk .bgStatus .currentBG {
+  font-size: min(24vw, 34vh);
+  line-height: 1;
+}
+
+body.theme-kiosk .bgButton .pill.direction {
+  font-size: min(12vw, 17vh);
+}
+
+body.theme-kiosk #currentTime {
+  font-size: min(10vw, 14vh);
+}
+
+/* ------------------------------------------------------------------ */
+/* Vault-Tec: 1950s retro-futurist poster, cream, navy and yellow      */
+/* ------------------------------------------------------------------ */
+
+body.theme-vaulttec {
+  --t-forecast: #2d7f9f;
+  --t-basal: #4b78b8;
+  --t-bg: #f1e8cc;
+  --t-fg: #1d3a6e;
+  --t-muted: #4b628c;
+  --t-accent: #1d3a6e;
+  --t-accent-ink: #f6c433;
+  --t-panel: #f6efd8;
+  --t-chart-bg: #fbf5e2;
+  --t-grid: #cdbf95;
+  --t-line: #1d3a6e;
+  --t-in: #1f5fa8;
+  --t-warn: #d18a00;
+  --t-urgent: #c62828;
+  --t-alarm-ink: #fff;
+  --t-font: 'Inter', 'Helvetica Neue', sans-serif;
+  --t-number-font: 'Bebas Neue', 'Impact', sans-serif;
+  --t-title-font: 'Bebas Neue', 'Impact', sans-serif;
+  --t-radius: 10px;
+  --t-border: 3px;
+}
+
+body.theme-vaulttec #toolbar {
+  background: #1d3a6e;
+  border-bottom: 4px solid #f6c433;
+}
+
+body.theme-vaulttec #toolbar .customTitle,
+body.theme-vaulttec #toolbar a,
+body.theme-vaulttec #toolbar i {
+  color: #f6c433;
+  letter-spacing: 0.12em;
+}
+
+body.theme-vaulttec .bgButton {
+  outline: 3px solid #1d3a6e;
+  outline-offset: 3px;
+  background: #fbf5e2;
+}
+
+body.theme-vaulttec .pill em,
+body.theme-vaulttec .statusPills .pill em {
+  background: #fbf5e2;
+  color: #1d3a6e;
+}
+
+body.theme-vaulttec #chartContainer {
+  box-shadow: inset 0 0 0 3px #1d3a6e;
+}
+
+body.theme-vaulttec legend,
+body.theme-vaulttec .ui-widget-header {
+  letter-spacing: 0.1em;
+  font-size: 1.2em;
+}
+
+
+/* ------------------------------------------------------------------ */
+/* Synthwave: neon pink and cyan over a purple night with a grid       */
+/* ------------------------------------------------------------------ */
+
+body.theme-synthwave {
+  --t-forecast: #ff7eb6;
+  --t-basal: #05d9e8;
+  --t-bg: #12002b;
+  --t-fg: #f8e9ff;
+  --t-muted: #b892d6;
+  --t-accent: #ff2a6d;
+  --t-accent-ink: #12002b;
+  --t-panel: #1b0638;
+  --t-chart-bg: #12002b;
+  --t-grid: #4a1a74;
+  --t-line: #05d9e8;
+  --t-in: #2de2e6;
+  --t-warn: #f9c80e;
+  --t-urgent: #ff2b2b;
+  --t-number-font: 'Orbitron', sans-serif;
+  --t-title-font: 'Orbitron', sans-serif;
+  --t-radius: 6px;
+
+  background: #12002b linear-gradient(to bottom, #12002b 0%, #2b0a3d 100%) fixed;
+}
+
+body.theme-synthwave #toolbar {
+  background: rgba(18, 0, 43, 0.9);
+  box-shadow: 0 2px 14px rgba(255, 42, 109, 0.6);
+}
+
+body.theme-synthwave #toolbar .customTitle {
+  color: #05d9e8;
+  text-shadow: 0 0 8px rgba(5, 217, 232, 0.8);
+  letter-spacing: 0.2em;
+}
+
+body.theme-synthwave #currentTime,
+body.theme-synthwave .inrange .bgButton,
+body.theme-synthwave .inrange .currentBG {
+  text-shadow: 0 0 10px rgba(45, 226, 230, 0.8), 0 0 24px rgba(255, 42, 109, 0.5);
+}
+
+body.theme-synthwave #currentTime {
+  color: #ff7eb6;
+  text-shadow: 0 0 10px rgba(255, 42, 109, 0.9);
+}
+
+body.theme-synthwave .bgButton {
+  outline: 2px solid #ff2a6d;
+  outline-offset: 2px;
+  box-shadow: 0 0 16px rgba(255, 42, 109, 0.6);
+}
+
+/* neon perspective grid behind the chart */
+body.theme-synthwave #chartContainer {
+  z-index: 0;
+  box-shadow: inset 0 0 0 2px #ff2a6d, 0 0 16px rgba(255, 42, 109, 0.5);
+  background: linear-gradient(to bottom, #12002b 0%, #12002b 55%, #3a0a52 100%);
+}
+
+body.theme-synthwave #chartContainer::before {
+  content: '';
+  position: absolute;
+  left: -50%;
+  right: -50%;
+  bottom: 0;
+  height: 60%;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    repeating-linear-gradient(to right, rgba(255, 42, 109, 0.35) 0, rgba(255, 42, 109, 0.35) 1px, transparent 1px, transparent 60px),
+    repeating-linear-gradient(to bottom, rgba(255, 42, 109, 0.35) 0, rgba(255, 42, 109, 0.35) 1px, transparent 1px, transparent 40px);
+  transform: perspective(300px) rotateX(55deg);
+  transform-origin: bottom;
+  mask-image: linear-gradient(to top, #000 0%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to top, #000 0%, transparent 100%);
+}
+
+body.theme-synthwave legend,
+body.theme-synthwave .ui-widget-header {
+  box-shadow: 0 0 10px rgba(255, 42, 109, 0.6);
+}
+
+/* ------------------------------------------------------------------ */
+/* Starship console: rounded orange/lavender panel blocks              */
+/* (inspired by LCARS)                                                 */
+/* ------------------------------------------------------------------ */
+
+body.theme-lcars {
+  --t-forecast: #cc99cc;
+  --t-basal: #9999ff;
+  --t-bg: #000;
+  --t-fg: #ff9966;
+  --t-muted: #cc99cc;
+  --t-accent: #ff9900;
+  --t-accent-ink: #000;
+  --t-panel: #000;
+  --t-chart-bg: #000;
+  --t-grid: #33334d;
+  --t-line: #cc99cc;
+  --t-in: #99ccff;
+  --t-warn: #ffcc66;
+  --t-urgent: #ff3333;
+  --t-font: 'Antonio', 'Arial Narrow', sans-serif;
+  --t-radius: 999px;
+  --t-border: 0;
+}
+
+body.theme-lcars #toolbar {
+  background: #000;
+  border-bottom: none;
+  box-shadow: inset 0 -10px 0 #cc99cc;
+}
+
+body.theme-lcars #toolbar .customTitle {
+  background: #ff9900;
+  color: #000;
+  border-radius: 0 999px 999px 0;
+  padding: 0 24px 0 60px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+body.theme-lcars #toolbar a,
+body.theme-lcars #toolbar i {
+  color: #ff9900;
+}
+
+/* the title is a coloured block here, so alarms recolour the block */
+body.theme-lcars #container.alarming.warning .customTitle {
+  background: var(--t-warn);
+  color: #000;
+}
+
+body.theme-lcars #container.alarming.urgent .customTitle {
+  background: var(--t-urgent);
+  color: #000;
+}
+
+body.theme-lcars #currentTime {
+  color: #ffcc99;
+}
+
+body.theme-lcars .pill {
+  background: #cc99cc;
+  border-color: #cc99cc;
+}
+
+body.theme-lcars .pill em,
+body.theme-lcars .statusPills .pill em {
+  background: #9999ff;
+  color: #000;
+}
+
+body.theme-lcars .focus-range li.selected {
+  background: #ff9900;
+}
+
+body.theme-lcars #chartContainer {
+  box-shadow: inset 14px 0 0 #9999ff, inset 0 -6px 0 #ff9900;
+  border-radius: 28px 0 0 28px;
+}
+
+body.theme-lcars legend,
+body.theme-lcars .navigation a,
+body.theme-lcars button,
+body.theme-lcars #admin_placeholder button {
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+body.theme-lcars fieldset {
+  border: none;
+  border-left: 14px solid #cc99cc;
+  border-radius: 24px 0 0 24px;
+}
+
+body.theme-lcars #drawer {
+  border-left: 10px solid #ff9900;
+}
+
+body.theme-lcars input,
+body.theme-lcars select {
+  border-radius: 6px;
+}
+
+/* ------------------------------------------------------------------ */
+/* Cockpit: glass instrument panel, white markings, green/amber/red    */
+/* ------------------------------------------------------------------ */
+
+body.theme-cockpit {
+  --t-forecast: #ff4fd8;
+  --t-basal: #36d1ff;
+  --t-bg: #0b0e12;
+  --t-fg: #e8eef2;
+  --t-muted: #8a96a3;
+  --t-accent: #36d1ff;
+  --t-accent-ink: #001018;
+  --t-panel: #12171d;
+  --t-chart-bg: #05070a;
+  --t-grid: #2c3640;
+  --t-line: #e8eef2;
+  --t-in: #00e676;
+  --t-warn: #ffb300;
+  --t-urgent: #ff1744;
+  --t-font: 'B612 Mono', 'Consolas', monospace;
+  --t-radius: 3px;
+  --t-border: 1px;
+}
+
+body.theme-cockpit .statusBox,
+body.theme-cockpit .bgButton {
+  outline: 1px solid #4a5560;
+  outline-offset: 3px;
+  box-shadow: inset 0 0 18px rgba(0, 0, 0, 0.8);
+}
+
+body.theme-cockpit #currentTime {
+  color: #36d1ff;
+}
+
+body.theme-cockpit .pill {
+  background: #12171d;
+  border-color: #4a5560;
+}
+
+body.theme-cockpit .pill label {
+  color: #e8eef2;
+}
+
+body.theme-cockpit .pill em,
+body.theme-cockpit .statusPills .pill em {
+  background: #05070a;
+  color: #00e676;
+}
+
+body.theme-cockpit #chartContainer {
+  box-shadow: inset 0 0 0 1px #4a5560, inset 0 0 30px rgba(0, 0, 0, 0.9);
+}
+
+body.theme-cockpit .navigation a,
+body.theme-cockpit #drawer .navigation a,
+body.theme-cockpit button,
+body.theme-cockpit #admin_placeholder button {
+  background: #12171d;
+  color: #36d1ff;
+  border-color: #36d1ff;
+}
+
+/* ------------------------------------------------------------------ */
+/* Digital rain: green code on black (inspired by The Matrix)          */
+/* ------------------------------------------------------------------ */
+
+body.theme-matrix {
+  --t-forecast: #9fd8ff;
+  --t-basal: #008f11;
+  --t-bg: #000;
+  --t-fg: #00ff41;
+  --t-muted: #008f11;
+  --t-accent: #008f11;
+  --t-accent-ink: #000;
+  --t-panel: #000;
+  --t-chart-bg: #000;
+  --t-grid: #003b00;
+  --t-line: #00ff41;
+  --t-in: #00ff41;
+  --t-warn: #ffd000;
+  --t-urgent: #ff3030;
+  --t-font: 'Share Tech Mono', 'Consolas', monospace;
+  --t-radius: 0;
+  --t-border: 1px;
+
+  text-shadow: 0 0 4px rgba(0, 255, 65, 0.5);
+}
+
+body.theme-matrix .pill em,
+body.theme-matrix .statusPills .pill em {
+  background: #000;
+  color: #00ff41;
+}
+
+body.theme-matrix .pill label {
+  color: #000;
+  text-shadow: none;
+}
+
+body.theme-matrix #chartContainer {
+  box-shadow: inset 0 0 0 1px #008f11;
+}
+
+/* faint falling code behind the page (the chart panel covers it) */
+body.theme-matrix::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  opacity: 0.18;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='240'%3E%3Cg fill='%2300ff41' font-family='monospace' font-size='14'%3E%3Ctext x='4' y='20'%3E7%3C/text%3E%3Ctext x='4' y='60'%3Eｱ%3C/text%3E%3Ctext x='4' y='130'%3E3%3C/text%3E%3Ctext x='4' y='190'%3Eﾈ%3C/text%3E%3Ctext x='34' y='40'%3Eﾘ%3C/text%3E%3Ctext x='34' y='100'%3E0%3C/text%3E%3Ctext x='34' y='170'%3Eｶ%3C/text%3E%3Ctext x='34' y='230'%3E9%3C/text%3E%3Ctext x='64' y='10'%3Eﾂ%3C/text%3E%3Ctext x='64' y='80'%3E5%3C/text%3E%3Ctext x='64' y='150'%3Eﾐ%3C/text%3E%3Ctext x='64' y='210'%3E1%3C/text%3E%3Ctext x='94' y='50'%3E8%3C/text%3E%3Ctext x='94' y='120'%3Eﾃ%3C/text%3E%3Ctext x='94' y='180'%3E4%3C/text%3E%3C/g%3E%3C/svg%3E");
+  background-size: 120px 240px;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  body.theme-matrix::before {
+    animation: matrix-rain 12s linear infinite;
+  }
+}
+
+@keyframes matrix-rain {
+  from { background-position: 0 0; }
+  to { background-position: 0 240px; }
+}
+
+/* ------------------------------------------------------------------ */
+/* Handheld: four-shade olive screen and pixel type                    */
+/* (inspired by the original Game Boy)                                 */
+/* ------------------------------------------------------------------ */
+
+body.theme-gameboy {
+  --t-forecast: #306230;
+  --t-basal: #306230;
+  --t-bg: #8bac0f;
+  --t-fg: #0f380f;
+  --t-muted: #306230;
+  --t-accent: #0f380f;
+  --t-accent-ink: #9bbc0f;
+  --t-panel: #9bbc0f;
+  --t-chart-bg: #9bbc0f;
+  --t-grid: #6f8f0d;
+  --t-line: #0f380f;
+  --t-in: #0f380f;
+  --t-warn: #b86b00;
+  --t-urgent: #b00020;
+  --t-alarm-ink: #fff;
+  --t-font: 'VT323', 'Courier New', monospace;
+  --t-title-font: 'Press Start 2P', 'Courier New', monospace;
+  --t-radius: 0;
+  --t-border: 3px;
+
+  font-size: 1.1em;
+}
+
+body.theme-gameboy #toolbar {
+  background: #0f380f;
+  border-bottom-color: #306230;
+}
+
+body.theme-gameboy #toolbar .customTitle,
+body.theme-gameboy #toolbar a,
+body.theme-gameboy #toolbar i {
+  color: #9bbc0f;
+}
+
+body.theme-gameboy #toolbar .customTitle {
+  font-size: 14px;
+}
+
+body.theme-gameboy .bgButton,
+body.theme-gameboy .statusBox {
+  outline: 3px solid #0f380f;
+  outline-offset: 3px;
+}
+
+body.theme-gameboy .pill em,
+body.theme-gameboy .statusPills .pill em {
+  background: #9bbc0f;
+  color: #0f380f;
+}
+
+body.theme-gameboy #chartContainer {
+  box-shadow: inset 0 0 0 4px #0f380f;
+}
+
+body.theme-gameboy legend,
+body.theme-gameboy .ui-widget-header {
+  font-size: 11px;
+  line-height: 1.8;
+}
+
+
+/* ------------------------------------------------------------------ */
+/* Paper: a calm printed-chart look                                    */
+/* ------------------------------------------------------------------ */
+
+body.theme-paper {
+  --t-forecast: #6b665c;
+  --t-basal: #8a8578;
+  --t-bg: #f4f1ea;
+  --t-fg: #222;
+  --t-muted: #6b665c;
+  --t-accent: #3a3a3a;
+  --t-accent-ink: #f4f1ea;
+  --t-panel: #faf8f3;
+  --t-chart-bg: #fbf9f4;
+  --t-grid: #cfc8b8;
+  --t-line: #222;
+  --t-in: #222;
+  --t-warn: #c26a00;
+  --t-urgent: #c00000;
+  --t-alarm-ink: #fff;
+  --t-font: 'IBM Plex Serif', Georgia, serif;
+  --t-radius: 2px;
+  --t-border: 1px;
+}
+
+body.theme-paper #toolbar {
+  background: #faf8f3;
+  border-bottom: 1px solid #3a3a3a;
+}
+
+body.theme-paper .pill {
+  background: transparent;
+  border-color: #3a3a3a;
+}
+
+body.theme-paper .pill label {
+  color: #222;
+}
+
+body.theme-paper .pill em,
+body.theme-paper .statusPills .pill em {
+  background: #3a3a3a;
+  color: #f4f1ea;
+}
+
+body.theme-paper #chartContainer {
+  box-shadow: inset 0 0 0 1px #3a3a3a;
+}
+
+body.theme-paper .navigation a,
+body.theme-paper #drawer .navigation a,
+body.theme-paper button,
+body.theme-paper #admin_placeholder button {
+  background: transparent;
+  color: #222;
+  border-color: #3a3a3a;
+}
+
