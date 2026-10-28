@@ -1,0 +1,575 @@
+@import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap');
+
+/*
+ * "Pip-Boy" retro terminal theme: flat mint green on black, solid green
+ * header bars with slate text, thin green boxes and inverted selections.
+ * The "Pip-Boy CRT" variant at the end adds glow, scanlines and a rolling
+ * scan band.
+ *
+ * Restyles the existing page only: every rule is scoped to body.theme-pipboy
+ * (added when the theme is picked in Settings), no markup changes. Boxes use
+ * outlines and inset shadows rather than borders where adding a border would
+ * change sizes the chart layout depends on. Warning and urgent states keep
+ * amber and red so out-of-range readings and alarms stay distinct.
+ */
+
+body.theme-pipboy {
+  --pip-green: #00bf63;
+  --pip-rgb: 0, 191, 99;
+  --pip-hi-rgb: 140, 255, 185;
+  --pip-tint: #021a0c;
+  --pip-green-dim: #00733b;
+  --pip-green-faint: rgba(var(--pip-rgb), 0.12);
+  --pip-slate: #32586f;
+  --pip-slate-dark: #183c52;
+  --pip-ink: #081920;
+  --pip-bg: #000;
+  --pip-amber: #ffc23d;
+  --pip-red: #ff4f3f;
+  --pip-font: 'Share Tech Mono', 'Consolas', 'DejaVu Sans Mono', 'Courier New', monospace;
+
+  background: var(--pip-bg);
+  color: var(--pip-green);
+  font-family: var(--pip-font);
+}
+
+body.theme-pipboy .primary,
+body.theme-pipboy #toolbar .customTitle,
+body.theme-pipboy #drawer,
+body.theme-pipboy #treatmentDrawer,
+body.theme-pipboy #boluscalcDrawer,
+body.theme-pipboy input,
+body.theme-pipboy select,
+body.theme-pipboy button,
+body.theme-pipboy textarea {
+  font-family: var(--pip-font);
+}
+
+/* labels and headings in capitals, like the reference; typed values are left alone */
+body.theme-pipboy #toolbar,
+body.theme-pipboy .pill label,
+body.theme-pipboy .focus-range,
+body.theme-pipboy legend,
+body.theme-pipboy label,
+body.theme-pipboy dt,
+body.theme-pipboy th,
+body.theme-pipboy button,
+body.theme-pipboy .navigation a,
+body.theme-pipboy #admin_placeholder b,
+body.theme-pipboy .ui-widget-header {
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+/* status line across the top */
+body.theme-pipboy #toolbar {
+  background: var(--pip-bg);
+  border-bottom: 3px solid var(--pip-green);
+}
+
+body.theme-pipboy #toolbar .customTitle {
+  color: var(--pip-green);
+  letter-spacing: 0.12em;
+}
+
+body.theme-pipboy #toolbar a,
+body.theme-pipboy #toolbar i,
+body.theme-pipboy #buttonbar a {
+  color: var(--pip-green);
+}
+
+/* outer frame around the whole screen */
+body.theme-pipboy #container {
+  box-shadow: inset 0 0 0 3px var(--pip-green);
+}
+
+/* clock and glucose boxes */
+body.theme-pipboy .statusBox,
+body.theme-pipboy .bgButton {
+  outline: 2px solid var(--pip-green);
+  outline-offset: 2px;
+}
+
+body.theme-pipboy .statusBox {
+  outline-offset: -8px;
+}
+
+/* compact layouts squeeze the clock row, so leave it unboxed there */
+@media (max-width: 750px), (max-height: 480px) {
+  body.theme-pipboy .statusBox {
+    outline: none;
+  }
+}
+
+body.theme-pipboy #currentTime,
+body.theme-pipboy .bgButton,
+body.theme-pipboy .bgStatus .currentBG,
+body.theme-pipboy .pill.direction {
+  color: var(--pip-green);
+}
+
+body.theme-pipboy .bgButton {
+  border-color: transparent;
+  border-radius: 0;
+}
+
+body.theme-pipboy .bgButton .pill.direction {
+  background: transparent;
+  border-color: transparent;
+  box-shadow: none;
+}
+
+body.theme-pipboy .inrange .bgButton,
+body.theme-pipboy .inrange .currentBG,
+body.theme-pipboy .inrange .pill.direction {
+  color: var(--pip-green);
+}
+
+body.theme-pipboy .warning .bgButton,
+body.theme-pipboy .warning .currentBG,
+body.theme-pipboy .warning .pill.direction {
+  color: var(--pip-amber);
+}
+
+body.theme-pipboy .warning .bgButton {
+  outline-color: var(--pip-amber);
+}
+
+body.theme-pipboy .urgent .bgButton,
+body.theme-pipboy .urgent .currentBG,
+body.theme-pipboy .urgent .pill.direction {
+  color: var(--pip-red);
+}
+
+body.theme-pipboy .urgent .bgButton {
+  outline-color: var(--pip-red);
+}
+
+/* alarms keep their solid amber/red backgrounds so they cannot be missed */
+body.theme-pipboy .alarming .bgButton,
+body.theme-pipboy .alarming .bgButton .currentBG,
+body.theme-pipboy .alarming .bgButton .pill.direction {
+  color: #000;
+}
+
+body.theme-pipboy .alarming.warning .bgButton {
+  background-color: var(--pip-amber);
+  border-color: var(--pip-amber);
+  outline-color: var(--pip-amber);
+}
+
+body.theme-pipboy .alarming.urgent .bgButton {
+  background-color: var(--pip-red);
+  border-color: var(--pip-red);
+  outline-color: var(--pip-red);
+}
+
+/* pills: green boxes, value part inverted like a selected tab */
+body.theme-pipboy .pill {
+  background: var(--pip-bg);
+  border: 2px solid var(--pip-green);
+  border-radius: 0;
+}
+
+body.theme-pipboy .pill:hover {
+  background: var(--pip-green-faint);
+}
+
+body.theme-pipboy .pill em {
+  background: var(--pip-green);
+  color: var(--pip-ink);
+  border-radius: 0;
+}
+
+body.theme-pipboy .pill label {
+  color: var(--pip-green);
+}
+
+body.theme-pipboy .statusPills .pill em {
+  background: var(--pip-green);
+  color: var(--pip-ink);
+}
+
+body.theme-pipboy .container .pill.warn em,
+body.theme-pipboy .alarming-timeago .timeago.pill.warn {
+  background: var(--pip-amber);
+  border-color: var(--pip-amber);
+  color: #000;
+}
+
+body.theme-pipboy .container .pill.urgent em,
+body.theme-pipboy .alarming-timeago .timeago.pill.urgent {
+  background: var(--pip-red);
+  border-color: var(--pip-red);
+  color: #000;
+}
+
+body.theme-pipboy .alarming-timeago .timeago.pill label {
+  color: #000;
+}
+
+/* chart hours selector reads like the tab bar */
+body.theme-pipboy .focus-range,
+body.theme-pipboy .focus-range li {
+  color: var(--pip-green);
+}
+
+body.theme-pipboy .focus-range li {
+  border-radius: 0;
+}
+
+body.theme-pipboy .focus-range li.selected {
+  background: var(--pip-green);
+  color: var(--pip-ink);
+  border-color: var(--pip-green);
+}
+
+/* chart panel */
+body.theme-pipboy #chartContainer {
+  background: var(--pip-bg);
+  box-shadow: inset 0 0 0 2px var(--pip-green);
+}
+
+body.theme-pipboy #chartContainer text,
+body.theme-pipboy #chartContainer .axis {
+  fill: var(--pip-green);
+  font-family: var(--pip-font);
+}
+
+body.theme-pipboy #chartContainer .tick line,
+body.theme-pipboy #chartContainer .domain,
+body.theme-pipboy #chartContainer line[stroke="grey"],
+body.theme-pipboy #chartContainer line[stroke="#777"] {
+  stroke: var(--pip-green-dim);
+}
+
+body.theme-pipboy #chartContainer line[stroke="white"],
+body.theme-pipboy #chartContainer path[stroke="white"] {
+  stroke: var(--pip-green);
+}
+
+/* drawers */
+body.theme-pipboy #drawer,
+body.theme-pipboy .drawer,
+body.theme-pipboy #treatmentDrawer,
+body.theme-pipboy #boluscalcDrawer {
+  background: var(--pip-bg);
+  color: var(--pip-green);
+  border-left: 3px solid var(--pip-green);
+  box-shadow: none;
+}
+
+body.theme-pipboy a,
+body.theme-pipboy #drawer a,
+body.theme-pipboy .drawer a,
+body.theme-pipboy #drawer dt {
+  color: var(--pip-green);
+}
+
+/* buttons and menu links: outlined rectangles, filled when hovered */
+body.theme-pipboy .navigation a,
+body.theme-pipboy button,
+body.theme-pipboy .button,
+body.theme-pipboy input[type="button"],
+body.theme-pipboy input[type="submit"],
+body.theme-pipboy .adminButton,
+body.theme-pipboy #admin_placeholder button {
+  background: var(--pip-bg);
+  color: var(--pip-green);
+  border: 2px solid var(--pip-green);
+  border-radius: 0;
+  box-shadow: none;
+}
+
+body.theme-pipboy .navigation a:hover,
+body.theme-pipboy .navigation a.multilink:hover,
+body.theme-pipboy button:hover,
+body.theme-pipboy .button:hover,
+body.theme-pipboy .adminButton:hover,
+body.theme-pipboy #admin_placeholder button:hover {
+  background: var(--pip-green);
+  color: var(--pip-ink);
+}
+
+body.theme-pipboy .navigation li.multilink a:first-child {
+  border-color: transparent;
+}
+
+/* section headers: solid green bar with slate text */
+body.theme-pipboy fieldset {
+  border: 2px solid var(--pip-green);
+  border-radius: 0;
+}
+
+body.theme-pipboy legend {
+  background: var(--pip-green);
+  color: var(--pip-slate);
+  padding: 2px 12px;
+}
+
+body.theme-pipboy legend * {
+  color: var(--pip-slate);
+}
+
+body.theme-pipboy input,
+body.theme-pipboy select,
+body.theme-pipboy textarea {
+  background: var(--pip-bg);
+  color: var(--pip-green);
+  border: 1px solid var(--pip-green);
+  border-radius: 0;
+}
+
+body.theme-pipboy input[type="radio"],
+body.theme-pipboy input[type="checkbox"],
+body.theme-pipboy input[type="range"] {
+  accent-color: var(--pip-green);
+}
+
+body.theme-pipboy input[type="range"] {
+  background: transparent;
+  border: none;
+}
+
+/* the monospace font is wider, so keep long dropdowns inside the drawer */
+body.theme-pipboy #drawer select {
+  max-width: 290px;
+}
+
+body.theme-pipboy .dropdown-menu,
+body.theme-pipboy #silenceBtn,
+body.theme-pipboy #viewMenu {
+  background: var(--pip-bg);
+  border: 2px solid var(--pip-green);
+  border-radius: 0;
+}
+
+body.theme-pipboy .dropdown-menu a {
+  color: var(--pip-green);
+}
+
+body.theme-pipboy .tooltip {
+  background: var(--pip-bg);
+  color: var(--pip-green);
+  border: 2px solid var(--pip-green);
+  border-radius: 0;
+}
+
+/* jQuery UI dialogs, e.g. Device authentication */
+body.theme-pipboy .ui-dialog,
+body.theme-pipboy .ui-widget-content {
+  background: var(--pip-bg);
+  color: var(--pip-green);
+  border: 2px solid var(--pip-green);
+  border-radius: 0;
+  font-family: var(--pip-font);
+}
+
+body.theme-pipboy .ui-widget-header {
+  background: var(--pip-green);
+  color: var(--pip-slate);
+  border: none;
+  border-radius: 0;
+}
+
+body.theme-pipboy .ui-dialog .ui-dialog-buttonpane {
+  background: transparent;
+  border-top: 2px solid var(--pip-green);
+}
+
+body.theme-pipboy .ui-widget-overlay {
+  background: #000;
+  opacity: 0.75;
+}
+
+/* Admin Tools (including the Pavlok screen) */
+body.theme-pipboy #admin_placeholder fieldset {
+  background: var(--pip-bg);
+}
+
+body.theme-pipboy #admin_placeholder hr {
+  border: none;
+  border-top: 1px solid var(--pip-green-dim);
+}
+
+body.theme-pipboy .pavlok-watch {
+  border: 2px solid var(--pip-green);
+}
+
+body.theme-pipboy .pavlok-alarms th,
+body.theme-pipboy .pavlok-log th {
+  background: var(--pip-green);
+  color: var(--pip-slate);
+  border-color: var(--pip-green);
+}
+
+body.theme-pipboy .pavlok-alarms td,
+body.theme-pipboy .pavlok-log td {
+  border-color: var(--pip-green);
+}
+
+body.theme-pipboy .pavlok-warning,
+body.theme-pipboy .pavlok-log .failed {
+  color: var(--pip-red);
+}
+
+body.theme-pipboy .pavlok-inactive {
+  color: var(--pip-amber);
+}
+
+/*
+ * "Pip-Boy CRT" variant: the flat theme above (the page also gets the
+ * theme-pipboy class) plus phosphor glow, scanlines and a rolling scan
+ * band. Alarm boxes stay crisp, and the overlays never intercept taps or
+ * clicks.
+ */
+
+body.theme-pipboycrt {
+  --pip-glow: 0 0 3px rgba(var(--pip-rgb), 0.8), 0 0 10px rgba(var(--pip-rgb), 0.35);
+  /* keep a solid colour under the gradient: iPhones fill the notch side
+     areas in landscape with the background colour, not the gradient */
+  background: #000 radial-gradient(ellipse at center, var(--pip-tint) 0%, #000 75%) fixed;
+  text-shadow: var(--pip-glow);
+}
+
+/* scanlines and darker tube corners */
+body.theme-pipboycrt::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9999;
+  background:
+    repeating-linear-gradient(to bottom, rgba(0, 0, 0, 0) 0, rgba(0, 0, 0, 0) 2px, rgba(0, 0, 0, 0.18) 3px),
+    radial-gradient(ellipse at center, rgba(0, 0, 0, 0) 62%, rgba(0, 0, 0, 0.5) 100%);
+}
+
+/* rolling scan band: a bright line that sweeps down the screen with a long
+   glow fading out behind it, like the Pip-Boy's refresh line; off for
+   people who ask for reduced motion */
+@media (prefers-reduced-motion: no-preference) {
+  body.theme-pipboycrt::before {
+    content: '';
+    position: fixed;
+    left: 0;
+    right: 0;
+    top: 0;
+    height: 40vh;
+    pointer-events: none;
+    z-index: 9998;
+    /* moving down: long faint trail on top, brightest at the leading edge */
+    background: linear-gradient(to bottom,
+      rgba(var(--pip-rgb), 0) 0%,
+      rgba(var(--pip-rgb), 0.025) 35%,
+      rgba(var(--pip-rgb), 0.06) 65%,
+      rgba(var(--pip-rgb), 0.11) 85%,
+      rgba(var(--pip-hi-rgb), 0.20) 95%,
+      rgba(var(--pip-hi-rgb), 0.06) 98%,
+      rgba(var(--pip-rgb), 0) 100%);
+    transform: translateY(-42vh);
+    animation: pipboy-scan-roll 11s linear infinite;
+    will-change: transform;
+  }
+}
+
+/* one slow sweep (~5s) per cycle, then out of view */
+@keyframes pipboy-scan-roll {
+  0% { transform: translateY(-42vh); }
+  45% { transform: translateY(102vh); }
+  100% { transform: translateY(102vh); }
+}
+
+body.theme-pipboycrt #container {
+  box-shadow: inset 0 0 0 3px var(--pip-green), 0 0 12px rgba(var(--pip-rgb), 0.35), inset 0 0 18px rgba(var(--pip-rgb), 0.15);
+}
+
+body.theme-pipboycrt #chartContainer {
+  box-shadow: inset 0 0 0 2px var(--pip-green), 0 0 10px rgba(var(--pip-rgb), 0.3), inset 0 0 24px rgba(var(--pip-rgb), 0.12);
+}
+
+body.theme-pipboycrt #toolbar {
+  box-shadow: 0 0 12px rgba(var(--pip-rgb), 0.35);
+}
+
+body.theme-pipboycrt #chartContainer svg {
+  filter: drop-shadow(0 0 2px rgba(var(--pip-rgb), 0.55));
+}
+
+body.theme-pipboycrt .statusBox,
+body.theme-pipboycrt .bgButton,
+body.theme-pipboycrt .pill,
+body.theme-pipboycrt button,
+body.theme-pipboycrt .navigation a,
+body.theme-pipboycrt #admin_placeholder button,
+body.theme-pipboycrt fieldset {
+  box-shadow: 0 0 8px rgba(var(--pip-rgb), 0.35);
+}
+
+/* filled green areas and coloured warnings get their own glow, not green text glow */
+body.theme-pipboycrt legend,
+body.theme-pipboycrt th,
+body.theme-pipboycrt .pill em,
+body.theme-pipboycrt .focus-range li.selected,
+body.theme-pipboycrt .ui-widget-header {
+  text-shadow: none;
+  box-shadow: 0 0 10px rgba(var(--pip-rgb), 0.45);
+}
+
+body.theme-pipboycrt .warning .bgButton,
+body.theme-pipboycrt .warning .currentBG,
+body.theme-pipboycrt .warning .pill.direction,
+body.theme-pipboycrt .pavlok-inactive {
+  text-shadow: 0 0 6px rgba(255, 194, 61, 0.7);
+}
+
+body.theme-pipboycrt .urgent .bgButton,
+body.theme-pipboycrt .urgent .currentBG,
+body.theme-pipboycrt .urgent .pill.direction,
+body.theme-pipboycrt .pavlok-warning,
+body.theme-pipboycrt .pavlok-log .failed {
+  text-shadow: 0 0 6px rgba(255, 79, 63, 0.8);
+}
+
+/* alarms: solid box with a matching halo, dark text without glow */
+body.theme-pipboycrt .alarming .bgButton,
+body.theme-pipboycrt .alarming .bgButton .currentBG,
+body.theme-pipboycrt .alarming .bgButton .pill.direction {
+  text-shadow: none;
+}
+
+body.theme-pipboycrt .alarming.warning .bgButton {
+  box-shadow: 0 0 18px rgba(255, 194, 61, 0.8);
+}
+
+body.theme-pipboycrt .alarming.urgent .bgButton {
+  box-shadow: 0 0 18px rgba(255, 79, 63, 0.9);
+}
+
+body.theme-pipboycrt input,
+body.theme-pipboycrt select,
+body.theme-pipboycrt textarea {
+  text-shadow: none;
+}
+
+@media (max-width: 750px), (max-height: 480px) {
+  body.theme-pipboycrt .statusBox {
+    box-shadow: none;
+  }
+}
+
+/*
+ * "Amber terminal": the Pip-Boy CRT design recoloured to a 1980s amber
+ * monitor (the page gets theme-pipboy and theme-pipboycrt too). Warnings use
+ * a pale yellow-white so they stand apart from the amber text.
+ */
+body.theme-amber {
+  --pip-green: #ffb000;
+  --pip-rgb: 255, 176, 0;
+  --pip-hi-rgb: 255, 222, 150;
+  --pip-tint: #1c1000;
+  --pip-green-dim: #8a5f00;
+  --pip-green-faint: rgba(255, 176, 0, 0.12);
+  --pip-slate: #4a2c00;
+  --pip-ink: #1a0f00;
+  --pip-amber: #fff2b0;
+}
