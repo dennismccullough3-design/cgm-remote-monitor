@@ -3,6 +3,7 @@
 /*
  * "Pip-Boy" retro terminal theme: flat mint green on black, solid green
  * header bars with slate text, thin green boxes and inverted selections.
+ * The "Pip-Boy CRT" variant at the end adds glow and scanlines.
  *
  * Restyles the existing page only: every rule is scoped to body.theme-pipboy
  * (added when the theme is picked in Settings), no markup changes. Boxes use
@@ -410,4 +411,106 @@ body.theme-pipboy .pavlok-log .failed {
 
 body.theme-pipboy .pavlok-inactive {
   color: var(--pip-amber);
+}
+
+/*
+ * "Pip-Boy CRT" variant: the flat theme above (the page also gets the
+ * theme-pipboy class) plus phosphor glow and scanlines. Alarm boxes stay
+ * crisp, and the overlay never intercepts taps or clicks.
+ */
+
+body.theme-pipboycrt {
+  --pip-glow: 0 0 3px rgba(0, 191, 99, 0.8), 0 0 10px rgba(0, 191, 99, 0.35);
+  background: radial-gradient(ellipse at center, #021a0c 0%, #000 75%) fixed;
+  text-shadow: var(--pip-glow);
+}
+
+/* scanlines and darker tube corners */
+body.theme-pipboycrt::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9999;
+  background:
+    repeating-linear-gradient(to bottom, rgba(0, 0, 0, 0) 0, rgba(0, 0, 0, 0) 2px, rgba(0, 0, 0, 0.18) 3px),
+    radial-gradient(ellipse at center, rgba(0, 0, 0, 0) 62%, rgba(0, 0, 0, 0.5) 100%);
+}
+
+body.theme-pipboycrt #container {
+  box-shadow: inset 0 0 0 3px var(--pip-green), 0 0 12px rgba(0, 191, 99, 0.35), inset 0 0 18px rgba(0, 191, 99, 0.15);
+}
+
+body.theme-pipboycrt #chartContainer {
+  box-shadow: inset 0 0 0 2px var(--pip-green), 0 0 10px rgba(0, 191, 99, 0.3), inset 0 0 24px rgba(0, 191, 99, 0.12);
+}
+
+body.theme-pipboycrt #toolbar {
+  box-shadow: 0 0 12px rgba(0, 191, 99, 0.35);
+}
+
+body.theme-pipboycrt #chartContainer svg {
+  filter: drop-shadow(0 0 2px rgba(0, 191, 99, 0.55));
+}
+
+body.theme-pipboycrt .statusBox,
+body.theme-pipboycrt .bgButton,
+body.theme-pipboycrt .pill,
+body.theme-pipboycrt button,
+body.theme-pipboycrt .navigation a,
+body.theme-pipboycrt #admin_placeholder button,
+body.theme-pipboycrt fieldset {
+  box-shadow: 0 0 8px rgba(0, 191, 99, 0.35);
+}
+
+/* filled green areas and coloured warnings get their own glow, not green text glow */
+body.theme-pipboycrt legend,
+body.theme-pipboycrt th,
+body.theme-pipboycrt .pill em,
+body.theme-pipboycrt .focus-range li.selected,
+body.theme-pipboycrt .ui-widget-header {
+  text-shadow: none;
+  box-shadow: 0 0 10px rgba(0, 191, 99, 0.45);
+}
+
+body.theme-pipboycrt .warning .bgButton,
+body.theme-pipboycrt .warning .currentBG,
+body.theme-pipboycrt .warning .pill.direction,
+body.theme-pipboycrt .pavlok-inactive {
+  text-shadow: 0 0 6px rgba(255, 194, 61, 0.7);
+}
+
+body.theme-pipboycrt .urgent .bgButton,
+body.theme-pipboycrt .urgent .currentBG,
+body.theme-pipboycrt .urgent .pill.direction,
+body.theme-pipboycrt .pavlok-warning,
+body.theme-pipboycrt .pavlok-log .failed {
+  text-shadow: 0 0 6px rgba(255, 79, 63, 0.8);
+}
+
+/* alarms: solid box with a matching halo, dark text without glow */
+body.theme-pipboycrt .alarming .bgButton,
+body.theme-pipboycrt .alarming .bgButton .currentBG,
+body.theme-pipboycrt .alarming .bgButton .pill.direction {
+  text-shadow: none;
+}
+
+body.theme-pipboycrt .alarming.warning .bgButton {
+  box-shadow: 0 0 18px rgba(255, 194, 61, 0.8);
+}
+
+body.theme-pipboycrt .alarming.urgent .bgButton {
+  box-shadow: 0 0 18px rgba(255, 79, 63, 0.9);
+}
+
+body.theme-pipboycrt input,
+body.theme-pipboycrt select,
+body.theme-pipboycrt textarea {
+  text-shadow: none;
+}
+
+@media (max-width: 750px), (max-height: 480px) {
+  body.theme-pipboycrt .statusBox {
+    box-shadow: none;
+  }
 }
