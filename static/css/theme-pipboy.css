@@ -3,7 +3,8 @@
 /*
  * "Pip-Boy" retro terminal theme: flat mint green on black, solid green
  * header bars with slate text, thin green boxes and inverted selections.
- * The "Pip-Boy CRT" variant at the end adds glow and scanlines.
+ * The "Pip-Boy CRT" variant at the end adds glow, scanlines and a rolling
+ * scan band.
  *
  * Restyles the existing page only: every rule is scoped to body.theme-pipboy
  * (added when the theme is picked in Settings), no markup changes. Boxes use
@@ -415,8 +416,9 @@ body.theme-pipboy .pavlok-inactive {
 
 /*
  * "Pip-Boy CRT" variant: the flat theme above (the page also gets the
- * theme-pipboy class) plus phosphor glow and scanlines. Alarm boxes stay
- * crisp, and the overlay never intercepts taps or clicks.
+ * theme-pipboy class) plus phosphor glow, scanlines and a rolling scan
+ * band. Alarm boxes stay crisp, and the overlays never intercept taps or
+ * clicks.
  */
 
 body.theme-pipboycrt {
@@ -437,6 +439,41 @@ body.theme-pipboycrt::after {
   background:
     repeating-linear-gradient(to bottom, rgba(0, 0, 0, 0) 0, rgba(0, 0, 0, 0) 2px, rgba(0, 0, 0, 0.18) 3px),
     radial-gradient(ellipse at center, rgba(0, 0, 0, 0) 62%, rgba(0, 0, 0, 0.5) 100%);
+}
+
+/* rolling scan band: a bright line that sweeps down the screen with a long
+   glow fading out behind it, like the Pip-Boy's refresh line; off for
+   people who ask for reduced motion */
+@media (prefers-reduced-motion: no-preference) {
+  body.theme-pipboycrt::before {
+    content: '';
+    position: fixed;
+    left: 0;
+    right: 0;
+    top: 0;
+    height: 40vh;
+    pointer-events: none;
+    z-index: 9998;
+    /* moving down: long faint trail on top, brightest at the leading edge */
+    background: linear-gradient(to bottom,
+      rgba(0, 191, 99, 0) 0%,
+      rgba(0, 191, 99, 0.025) 35%,
+      rgba(0, 191, 99, 0.06) 65%,
+      rgba(0, 191, 99, 0.11) 85%,
+      rgba(140, 255, 185, 0.20) 95%,
+      rgba(140, 255, 185, 0.06) 98%,
+      rgba(0, 191, 99, 0) 100%);
+    transform: translateY(-42vh);
+    animation: pipboy-scan-roll 11s linear infinite;
+    will-change: transform;
+  }
+}
+
+/* one slow sweep (~5s) per cycle, then out of view */
+@keyframes pipboy-scan-roll {
+  0% { transform: translateY(-42vh); }
+  45% { transform: translateY(102vh); }
+  100% { transform: translateY(102vh); }
 }
 
 body.theme-pipboycrt #container {
