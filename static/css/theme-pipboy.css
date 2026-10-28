@@ -1,39 +1,31 @@
+@import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap');
+
 /*
- * "Pip-Boy" retro terminal theme.
+ * "Pip-Boy" retro terminal theme: flat mint green on black, solid green
+ * header bars with slate text, thin green boxes and inverted selections.
  *
  * Restyles the existing page only: every rule is scoped to body.theme-pipboy
- * (added when the theme is picked in Settings), no markup changes. Warning
- * and urgent states keep amber and red so out-of-range readings and alarms
- * stay distinct from the green-on-black look.
+ * (added when the theme is picked in Settings), no markup changes. Boxes use
+ * outlines and inset shadows rather than borders where adding a border would
+ * change sizes the chart layout depends on. Warning and urgent states keep
+ * amber and red so out-of-range readings and alarms stay distinct.
  */
 
 body.theme-pipboy {
-  --pip-green: #3dff7a;
-  --pip-green-dim: #1f9e4a;
-  --pip-green-faint: rgba(61, 255, 122, 0.14);
-  --pip-bg: #020c05;
-  --pip-panel: #04170a;
+  --pip-green: #00bf63;
+  --pip-green-dim: #00733b;
+  --pip-green-faint: rgba(0, 191, 99, 0.12);
+  --pip-slate: #32586f;
+  --pip-slate-dark: #183c52;
+  --pip-ink: #081920;
+  --pip-bg: #000;
   --pip-amber: #ffc23d;
   --pip-red: #ff4f3f;
-  --pip-glow: 0 0 4px rgba(61, 255, 122, 0.75), 0 0 12px rgba(61, 255, 122, 0.35);
   --pip-font: 'Share Tech Mono', 'Consolas', 'DejaVu Sans Mono', 'Courier New', monospace;
 
-  background: radial-gradient(ellipse at center, #062611 0%, var(--pip-bg) 70%) fixed;
+  background: var(--pip-bg);
   color: var(--pip-green);
   font-family: var(--pip-font);
-  text-shadow: 0 0 3px rgba(61, 255, 122, 0.45);
-}
-
-/* CRT scanlines and vignette; never intercept clicks */
-body.theme-pipboy::after {
-  content: '';
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  z-index: 9999;
-  background:
-    repeating-linear-gradient(to bottom, rgba(0, 0, 0, 0) 0, rgba(0, 0, 0, 0) 2px, rgba(0, 0, 0, 0.22) 3px),
-    radial-gradient(ellipse at center, rgba(0, 0, 0, 0) 60%, rgba(0, 0, 0, 0.55) 100%);
 }
 
 body.theme-pipboy .primary,
@@ -45,41 +37,75 @@ body.theme-pipboy input,
 body.theme-pipboy select,
 body.theme-pipboy button,
 body.theme-pipboy textarea {
-  font-family: inherit;
+  font-family: var(--pip-font);
 }
 
-/* top bar */
+/* labels and headings in capitals, like the reference; typed values are left alone */
+body.theme-pipboy #toolbar,
+body.theme-pipboy .pill label,
+body.theme-pipboy .focus-range,
+body.theme-pipboy legend,
+body.theme-pipboy label,
+body.theme-pipboy dt,
+body.theme-pipboy th,
+body.theme-pipboy button,
+body.theme-pipboy .navigation a,
+body.theme-pipboy #admin_placeholder b,
+body.theme-pipboy .ui-widget-header {
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+/* status line across the top */
 body.theme-pipboy #toolbar {
-  background: linear-gradient(to bottom, #07240f, #041509);
-  border-bottom: 2px solid var(--pip-green-dim);
-  box-shadow: 0 0 14px rgba(61, 255, 122, 0.25);
+  background: var(--pip-bg);
+  border-bottom: 3px solid var(--pip-green);
 }
 
 body.theme-pipboy #toolbar .customTitle {
   color: var(--pip-green);
   letter-spacing: 0.12em;
-  text-transform: uppercase;
-  text-shadow: var(--pip-glow);
 }
 
 body.theme-pipboy #toolbar a,
 body.theme-pipboy #toolbar i,
 body.theme-pipboy #buttonbar a {
   color: var(--pip-green);
-  text-shadow: var(--pip-glow);
 }
 
-/* clock, glucose and status pills */
+/* outer frame around the whole screen */
+body.theme-pipboy #container {
+  box-shadow: inset 0 0 0 3px var(--pip-green);
+}
+
+/* clock and glucose boxes */
+body.theme-pipboy .statusBox,
+body.theme-pipboy .bgButton {
+  outline: 2px solid var(--pip-green);
+  outline-offset: 2px;
+}
+
+body.theme-pipboy .statusBox {
+  outline-offset: -8px;
+}
+
+/* compact layouts squeeze the clock row, so leave it unboxed there */
+@media (max-width: 750px), (max-height: 480px) {
+  body.theme-pipboy .statusBox {
+    outline: none;
+  }
+}
+
 body.theme-pipboy #currentTime,
 body.theme-pipboy .bgButton,
 body.theme-pipboy .bgStatus .currentBG,
 body.theme-pipboy .pill.direction {
   color: var(--pip-green);
-  text-shadow: var(--pip-glow);
 }
 
 body.theme-pipboy .bgButton {
   border-color: transparent;
+  border-radius: 0;
 }
 
 body.theme-pipboy .bgButton .pill.direction {
@@ -98,14 +124,20 @@ body.theme-pipboy .warning .bgButton,
 body.theme-pipboy .warning .currentBG,
 body.theme-pipboy .warning .pill.direction {
   color: var(--pip-amber);
-  text-shadow: 0 0 6px rgba(255, 194, 61, 0.7);
+}
+
+body.theme-pipboy .warning .bgButton {
+  outline-color: var(--pip-amber);
 }
 
 body.theme-pipboy .urgent .bgButton,
 body.theme-pipboy .urgent .currentBG,
 body.theme-pipboy .urgent .pill.direction {
   color: var(--pip-red);
-  text-shadow: 0 0 6px rgba(255, 79, 63, 0.8);
+}
+
+body.theme-pipboy .urgent .bgButton {
+  outline-color: var(--pip-red);
 }
 
 /* alarms keep their solid amber/red backgrounds so they cannot be missed */
@@ -113,26 +145,25 @@ body.theme-pipboy .alarming .bgButton,
 body.theme-pipboy .alarming .bgButton .currentBG,
 body.theme-pipboy .alarming .bgButton .pill.direction {
   color: #000;
-  text-shadow: none;
 }
 
 body.theme-pipboy .alarming.warning .bgButton {
   background-color: var(--pip-amber);
   border-color: var(--pip-amber);
-  box-shadow: 0 0 18px rgba(255, 194, 61, 0.8);
+  outline-color: var(--pip-amber);
 }
 
 body.theme-pipboy .alarming.urgent .bgButton {
   background-color: var(--pip-red);
   border-color: var(--pip-red);
-  box-shadow: 0 0 18px rgba(255, 79, 63, 0.9);
+  outline-color: var(--pip-red);
 }
 
+/* pills: green boxes, value part inverted like a selected tab */
 body.theme-pipboy .pill {
-  background: transparent;
-  border: 1px solid var(--pip-green-dim);
-  border-radius: 2px;
-  box-shadow: inset 0 0 6px rgba(61, 255, 122, 0.15);
+  background: var(--pip-bg);
+  border: 2px solid var(--pip-green);
+  border-radius: 0;
 }
 
 body.theme-pipboy .pill:hover {
@@ -141,18 +172,17 @@ body.theme-pipboy .pill:hover {
 
 body.theme-pipboy .pill em {
   background: var(--pip-green);
-  color: var(--pip-bg);
-  border-radius: 1px;
-  text-shadow: none;
+  color: var(--pip-ink);
+  border-radius: 0;
 }
 
-body.theme-pipboy .pill label,
-body.theme-pipboy .statusPills .pill em {
+body.theme-pipboy .pill label {
   color: var(--pip-green);
 }
 
 body.theme-pipboy .statusPills .pill em {
-  background: transparent;
+  background: var(--pip-green);
+  color: var(--pip-ink);
 }
 
 body.theme-pipboy .container .pill.warn em,
@@ -173,24 +203,26 @@ body.theme-pipboy .alarming-timeago .timeago.pill label {
   color: #000;
 }
 
-body.theme-pipboy .focus-range li,
-body.theme-pipboy .focus-range {
-  color: var(--pip-green-dim);
+/* chart hours selector reads like the tab bar */
+body.theme-pipboy .focus-range,
+body.theme-pipboy .focus-range li {
+  color: var(--pip-green);
+}
+
+body.theme-pipboy .focus-range li {
+  border-radius: 0;
 }
 
 body.theme-pipboy .focus-range li.selected {
   background: var(--pip-green);
-  color: var(--pip-bg);
+  color: var(--pip-ink);
+  border-color: var(--pip-green);
 }
 
-/* chart */
+/* chart panel */
 body.theme-pipboy #chartContainer {
-  background:
-    linear-gradient(rgba(61, 255, 122, 0.05) 1px, transparent 1px) 0 0 / 100% 40px,
-    linear-gradient(90deg, rgba(61, 255, 122, 0.05) 1px, transparent 1px) 0 0 / 40px 100%,
-    var(--pip-panel);
-  border: 1px solid var(--pip-green-dim);
-  box-shadow: inset 0 0 30px rgba(0, 0, 0, 0.7), 0 0 12px rgba(61, 255, 122, 0.2);
+  background: var(--pip-bg);
+  box-shadow: inset 0 0 0 2px var(--pip-green);
 }
 
 body.theme-pipboy #chartContainer text,
@@ -211,41 +243,87 @@ body.theme-pipboy #chartContainer path[stroke="white"] {
   stroke: var(--pip-green);
 }
 
-/* settings, care portal and other drawers */
+/* drawers */
 body.theme-pipboy #drawer,
 body.theme-pipboy .drawer,
 body.theme-pipboy #treatmentDrawer,
 body.theme-pipboy #boluscalcDrawer {
-  background: var(--pip-panel);
+  background: var(--pip-bg);
   color: var(--pip-green);
-  border-left: 2px solid var(--pip-green-dim);
-  box-shadow: -6px 0 18px rgba(61, 255, 122, 0.2);
+  border-left: 3px solid var(--pip-green);
+  box-shadow: none;
 }
 
+body.theme-pipboy a,
 body.theme-pipboy #drawer a,
 body.theme-pipboy .drawer a,
-body.theme-pipboy #drawer legend,
 body.theme-pipboy #drawer dt {
   color: var(--pip-green);
 }
 
-body.theme-pipboy .navigation a {
-  background: transparent;
-  border: 1px solid var(--pip-green-dim);
+/* buttons and menu links: outlined rectangles, filled when hovered */
+body.theme-pipboy .navigation a,
+body.theme-pipboy button,
+body.theme-pipboy .button,
+body.theme-pipboy input[type="button"],
+body.theme-pipboy input[type="submit"],
+body.theme-pipboy .adminButton,
+body.theme-pipboy #admin_placeholder button {
+  background: var(--pip-bg);
   color: var(--pip-green);
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
+  border: 2px solid var(--pip-green);
+  border-radius: 0;
+  box-shadow: none;
 }
 
 body.theme-pipboy .navigation a:hover,
-body.theme-pipboy .navigation a.multilink:hover {
+body.theme-pipboy .navigation a.multilink:hover,
+body.theme-pipboy button:hover,
+body.theme-pipboy .button:hover,
+body.theme-pipboy .adminButton:hover,
+body.theme-pipboy #admin_placeholder button:hover {
   background: var(--pip-green);
-  color: var(--pip-bg);
-  text-shadow: none;
+  color: var(--pip-ink);
 }
 
 body.theme-pipboy .navigation li.multilink a:first-child {
   border-color: transparent;
+}
+
+/* section headers: solid green bar with slate text */
+body.theme-pipboy fieldset {
+  border: 2px solid var(--pip-green);
+  border-radius: 0;
+}
+
+body.theme-pipboy legend {
+  background: var(--pip-green);
+  color: var(--pip-slate);
+  padding: 2px 12px;
+}
+
+body.theme-pipboy legend * {
+  color: var(--pip-slate);
+}
+
+body.theme-pipboy input,
+body.theme-pipboy select,
+body.theme-pipboy textarea {
+  background: var(--pip-bg);
+  color: var(--pip-green);
+  border: 1px solid var(--pip-green);
+  border-radius: 0;
+}
+
+body.theme-pipboy input[type="radio"],
+body.theme-pipboy input[type="checkbox"],
+body.theme-pipboy input[type="range"] {
+  accent-color: var(--pip-green);
+}
+
+body.theme-pipboy input[type="range"] {
+  background: transparent;
+  border: none;
 }
 
 /* the monospace font is wider, so keep long dropdowns inside the drawer */
@@ -253,84 +331,12 @@ body.theme-pipboy #drawer select {
   max-width: 290px;
 }
 
-body.theme-pipboy a {
-  color: var(--pip-green);
-}
-
-/* jQuery UI dialogs, e.g. Device authentication */
-body.theme-pipboy .ui-dialog,
-body.theme-pipboy .ui-widget-content {
-  background: var(--pip-panel);
-  color: var(--pip-green);
-  border: 1px solid var(--pip-green-dim);
-  font-family: var(--pip-font);
-}
-
-body.theme-pipboy .ui-dialog {
-  box-shadow: 0 0 24px rgba(61, 255, 122, 0.3);
-}
-
-body.theme-pipboy .ui-widget-header {
-  background: #07240f;
-  color: var(--pip-green);
-  border: 1px solid var(--pip-green-dim);
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-}
-
-body.theme-pipboy .ui-dialog .ui-dialog-buttonpane {
-  background: transparent;
-  border-top-color: var(--pip-green-dim);
-}
-
-body.theme-pipboy .ui-widget-overlay {
-  background: #000;
-  opacity: 0.7;
-}
-
-body.theme-pipboy fieldset {
-  border-color: var(--pip-green-dim);
-}
-
-body.theme-pipboy input,
-body.theme-pipboy select,
-body.theme-pipboy textarea {
-  background: #000;
-  color: var(--pip-green);
-  border: 1px solid var(--pip-green-dim);
-}
-
-body.theme-pipboy input[type="radio"],
-body.theme-pipboy input[type="checkbox"] {
-  accent-color: var(--pip-green);
-}
-
-body.theme-pipboy button,
-body.theme-pipboy .button,
-body.theme-pipboy input[type="button"],
-body.theme-pipboy input[type="submit"],
-body.theme-pipboy .adminButton {
-  background: transparent;
-  color: var(--pip-green);
-  border: 1px solid var(--pip-green);
-  text-shadow: var(--pip-glow);
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-}
-
-body.theme-pipboy button:hover,
-body.theme-pipboy .button:hover,
-body.theme-pipboy .adminButton:hover {
-  background: var(--pip-green);
-  color: var(--pip-bg);
-  text-shadow: none;
-}
-
 body.theme-pipboy .dropdown-menu,
 body.theme-pipboy #silenceBtn,
 body.theme-pipboy #viewMenu {
-  background: var(--pip-panel);
-  border-color: var(--pip-green-dim);
+  background: var(--pip-bg);
+  border: 2px solid var(--pip-green);
+  border-radius: 0;
 }
 
 body.theme-pipboy .dropdown-menu a {
@@ -338,73 +344,70 @@ body.theme-pipboy .dropdown-menu a {
 }
 
 body.theme-pipboy .tooltip {
-  background: var(--pip-panel);
+  background: var(--pip-bg);
   color: var(--pip-green);
-  border: 1px solid var(--pip-green-dim);
+  border: 2px solid var(--pip-green);
+  border-radius: 0;
+}
+
+/* jQuery UI dialogs, e.g. Device authentication */
+body.theme-pipboy .ui-dialog,
+body.theme-pipboy .ui-widget-content {
+  background: var(--pip-bg);
+  color: var(--pip-green);
+  border: 2px solid var(--pip-green);
+  border-radius: 0;
+  font-family: var(--pip-font);
+}
+
+body.theme-pipboy .ui-widget-header {
+  background: var(--pip-green);
+  color: var(--pip-slate);
+  border: none;
+  border-radius: 0;
+}
+
+body.theme-pipboy .ui-dialog .ui-dialog-buttonpane {
+  background: transparent;
+  border-top: 2px solid var(--pip-green);
+}
+
+body.theme-pipboy .ui-widget-overlay {
+  background: #000;
+  opacity: 0.75;
 }
 
 /* Admin Tools (including the Pavlok screen) */
 body.theme-pipboy #admin_placeholder fieldset {
-  background: rgba(4, 23, 10, 0.85);
+  background: var(--pip-bg);
 }
 
-body.theme-pipboy #admin_placeholder button {
-  background: transparent;
-  color: var(--pip-green);
-  border: 2px solid var(--pip-green);
-  border-radius: 2px;
-  box-shadow: 0 0 8px rgba(61, 255, 122, 0.3);
-  text-shadow: var(--pip-glow);
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-}
-
-body.theme-pipboy #admin_placeholder button:hover {
-  background: var(--pip-green);
-  color: var(--pip-bg);
-  text-shadow: none;
-}
-
-body.theme-pipboy input[type="range"] {
-  accent-color: var(--pip-green);
-  background: transparent;
+body.theme-pipboy #admin_placeholder hr {
   border: none;
+  border-top: 1px solid var(--pip-green-dim);
 }
 
-body.theme-pipboy #admin_placeholder legend {
-  color: var(--pip-green);
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
+body.theme-pipboy .pavlok-watch {
+  border: 2px solid var(--pip-green);
 }
 
-body.theme-pipboy .pavlok-watch,
 body.theme-pipboy .pavlok-alarms th,
+body.theme-pipboy .pavlok-log th {
+  background: var(--pip-green);
+  color: var(--pip-slate);
+  border-color: var(--pip-green);
+}
+
 body.theme-pipboy .pavlok-alarms td,
-body.theme-pipboy .pavlok-log th,
 body.theme-pipboy .pavlok-log td {
-  border-color: var(--pip-green-dim);
+  border-color: var(--pip-green);
 }
 
 body.theme-pipboy .pavlok-warning,
 body.theme-pipboy .pavlok-log .failed {
   color: var(--pip-red);
-  text-shadow: 0 0 6px rgba(255, 79, 63, 0.7);
 }
 
 body.theme-pipboy .pavlok-inactive {
   color: var(--pip-amber);
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  body.theme-pipboy #currentTime,
-  body.theme-pipboy .bgButton {
-    animation: pipboy-flicker 6s infinite;
-  }
-}
-
-@keyframes pipboy-flicker {
-  0%, 96%, 100% { opacity: 1; }
-  97% { opacity: 0.86; }
-  98% { opacity: 1; }
-  99% { opacity: 0.92; }
 }
