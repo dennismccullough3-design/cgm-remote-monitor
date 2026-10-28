@@ -421,7 +421,9 @@ body.theme-pipboy .pavlok-inactive {
 
 body.theme-pipboycrt {
   --pip-glow: 0 0 3px rgba(0, 191, 99, 0.8), 0 0 10px rgba(0, 191, 99, 0.35);
-  background: radial-gradient(ellipse at center, #021a0c 0%, #000 75%) fixed;
+  /* keep a solid colour under the gradient: iPhones fill the notch side
+     areas in landscape with the background colour, not the gradient */
+  background: #000 radial-gradient(ellipse at center, #021a0c 0%, #000 75%) fixed;
   text-shadow: var(--pip-glow);
 }
 
