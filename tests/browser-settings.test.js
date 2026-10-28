@@ -77,4 +77,40 @@ describe('browser settings', function () {
     }).get().should.deepEqual([10, 5, 1, 0.5, 0.1]);
     $('#bolusRenderOver').val().should.equal('10');
   });
+
+  it('checks the radio for a theme whose name contains digits', function () {
+    $('body').append(
+      '<input type="radio" name="theme-browser" id="theme-default-browser" value="default">' +
+      '<input type="radio" name="theme-browser" id="theme-cyberpunk2077-browser" value="cyberpunk2077">'
+    );
+
+    var client = {
+      browserUtils: { reload: function () {} }
+      , language: { languages: [], translate: function (text) { return text; } }
+      , plugins: {
+        specialPlugins: []
+        , eachEnabledPlugin: function () {}
+      }
+      , translate: function (text) { return text; }
+      , utils: { scaleMgdl: function (value) { return value; } }
+    };
+    var serverSettings = {
+      settings: {
+        theme: 'cyberpunk2077'
+        , thresholds: {
+          bgHigh: 260
+          , bgTargetTop: 180
+          , bgTargetBottom: 80
+          , bgLow: 55
+        }
+        , units: 'mg/dl'
+      }
+      , extendedSettings: {}
+    };
+
+    client.settings = browserSettings(client, serverSettings, $);
+    browserSettings.loadAndWireForm();
+
+    $('input:radio[name=theme-browser]:checked').val().should.equal('cyberpunk2077');
+  });
 });

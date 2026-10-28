@@ -1,8 +1,10 @@
-@import url('https://fonts.googleapis.com/css2?family=Antonio:wght@500;700&family=Atkinson+Hyperlegible:wght@400;700&family=B612+Mono:wght@400;700&family=Bebas+Neue&family=IBM+Plex+Serif:wght@400;600&family=Inter:wght@400;600&family=Orbitron:wght@500;700&family=Press+Start+2P&family=Share+Tech+Mono&family=VT323&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Antonio:wght@500;700&family=Architects+Daughter&family=Atkinson+Hyperlegible:wght@400;700&family=Audiowide&family=B612+Mono:wght@400;700&family=Bebas+Neue&family=Creepster&family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Serif:wght@400;600&family=Inter:wght@400;600&family=Libre+Baskerville:wght@700&family=Monoton&family=Orbitron:wght@500;700&family=Oxanium:wght@500;700&family=Press+Start+2P&family=Rajdhani:wght@500;700&family=Share+Tech+Mono&family=Teko:wght@500;600&family=VT323&display=swap');
 
 /*
  * Extra themes picked in Settings > Theme: night, highcontrast, light, kiosk,
- * vaulttec, synthwave, lcars, cockpit, matrix, gameboy and paper.
+ * vaulttec, synthwave, lcars, cockpit, matrix, gameboy, paper, blueprint,
+ * upsidedown, spartan, tron, neon, gauges, team, halloween, cyberpunk and
+ * cyberpunk2077.
  *
  * Restyles the existing page only. The page gets theme-extra plus
  * theme-<name>; the shared rules below are driven by the variables each
@@ -101,6 +103,8 @@ body.theme-extra .bgButton {
 body.theme-extra .bgButton .pill.direction {
   background: transparent;
   border-color: transparent;
+  box-shadow: none;
+  clip-path: none;
 }
 
 body.theme-extra .inrange .bgButton,
@@ -235,6 +239,12 @@ body.theme-extra #chartContainer line[stroke="white"],
 body.theme-extra #chartContainer path[stroke="white"],
 body.theme-extra #chartContainer circle[stroke="white"] {
   stroke: var(--t-line);
+}
+
+/* the lower chart's top edge is drawn near-black, which shows on lighter
+   chart backgrounds */
+body.theme-extra #chartContainer line[stroke="#111"] {
+  stroke: var(--t-grid);
 }
 
 /* the chart's zoom selection box is drawn grey with a white outline */
@@ -1122,3 +1132,786 @@ body.theme-paper #admin_placeholder button {
   border-color: #3a3a3a;
 }
 
+/* ------------------------------------------------------------------ */
+/* Blueprint: white drafting lines on blueprint blue grid paper        */
+/* ------------------------------------------------------------------ */
+
+body.theme-blueprint {
+  --t-bg: #1f4e8c;
+  --t-fg: #eaf2ff;
+  --t-muted: #b9cff0;
+  --t-accent: #eaf2ff;
+  --t-accent-ink: #1f4e8c;
+  --t-panel: #1b4680;
+  --t-chart-bg: #1d4b88;
+  --t-grid: #5f86bf;
+  --t-line: #ffffff;
+  --t-forecast: #9fd3ff;
+  --t-basal: #9fd3ff;
+  --t-in: #ffffff;
+  --t-warn: #ffd166;
+  --t-urgent: #ff5c5c;
+  --t-font: 'IBM Plex Mono', 'Consolas', monospace;
+  --t-title-font: 'Architects Daughter', 'Comic Sans MS', cursive;
+  --t-radius: 0;
+  --t-border: 1px;
+
+  background:
+    linear-gradient(rgba(255, 255, 255, 0.10) 1px, transparent 1px) 0 0 / 100px 100px,
+    linear-gradient(90deg, rgba(255, 255, 255, 0.10) 1px, transparent 1px) 0 0 / 100px 100px,
+    linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px) 0 0 / 20px 20px,
+    linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px) 0 0 / 20px 20px,
+    #1f4e8c;
+}
+
+body.theme-blueprint #toolbar {
+  background: rgba(27, 70, 128, 0.9);
+  border-bottom: 1px dashed #eaf2ff;
+}
+
+body.theme-blueprint #toolbar .customTitle {
+  font-size: 1.3em;
+  letter-spacing: 0.05em;
+}
+
+body.theme-blueprint .bgButton,
+body.theme-blueprint .statusBox {
+  outline: 1px dashed #eaf2ff;
+  outline-offset: 4px;
+}
+
+body.theme-blueprint .pill {
+  background: transparent;
+  border-color: #eaf2ff;
+}
+
+body.theme-blueprint .pill label {
+  color: #eaf2ff;
+}
+
+body.theme-blueprint .pill em,
+body.theme-blueprint .statusPills .pill em {
+  background: #eaf2ff;
+  color: #1f4e8c;
+}
+
+body.theme-blueprint #chartContainer {
+  background:
+    linear-gradient(rgba(255, 255, 255, 0.07) 1px, transparent 1px) 0 0 / 20px 20px,
+    linear-gradient(90deg, rgba(255, 255, 255, 0.07) 1px, transparent 1px) 0 0 / 20px 20px,
+    #1d4b88;
+  box-shadow: inset 0 0 0 1px #eaf2ff;
+}
+
+body.theme-blueprint legend,
+body.theme-blueprint .ui-widget-header {
+  font-size: 1.15em;
+}
+
+/* ------------------------------------------------------------------ */
+/* Upside Down: 80s horror title glow and a VHS flicker                */
+/* (inspired by Stranger Things)                                       */
+/* ------------------------------------------------------------------ */
+
+body.theme-upsidedown {
+  --t-bg: #050505;
+  --t-fg: #eadede;
+  --t-muted: #9a8080;
+  --t-accent: #b3001b;
+  --t-accent-ink: #fff2f2;
+  --t-panel: #0b0606;
+  --t-chart-bg: #080404;
+  --t-grid: #3a1216;
+  --t-line: #c9a9a9;
+  --t-forecast: #d97a85;
+  --t-basal: #6b1a24;
+  --t-in: #f2e8dc;
+  --t-warn: #ff9f1c;
+  --t-urgent: #ff1f3d;
+  --t-font: 'Inter', 'Helvetica Neue', sans-serif;
+  --t-title-font: 'Libre Baskerville', Georgia, serif;
+  --t-number-font: 'Libre Baskerville', Georgia, serif;
+  --t-radius: 2px;
+  --t-border: 1px;
+}
+
+body.theme-upsidedown #toolbar .customTitle {
+  color: transparent;
+  -webkit-text-stroke: 1px #ff1f3d;
+  text-shadow: 0 0 6px rgba(255, 31, 61, 0.9), 0 0 18px rgba(179, 0, 27, 0.8);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+body.theme-upsidedown #currentTime,
+body.theme-upsidedown .inrange .bgButton,
+body.theme-upsidedown .inrange .currentBG {
+  text-shadow: 0 0 8px rgba(179, 0, 27, 0.9), 0 0 22px rgba(179, 0, 27, 0.55);
+}
+
+body.theme-upsidedown .bgButton {
+  outline: 1px solid #b3001b;
+  outline-offset: 3px;
+  box-shadow: 0 0 18px rgba(179, 0, 27, 0.5);
+}
+
+body.theme-upsidedown #chartContainer {
+  box-shadow: inset 0 0 0 1px #b3001b, inset 0 0 40px rgba(179, 0, 27, 0.25);
+}
+
+/* VHS: faint tracking lines over the page, flickering now and then */
+body.theme-upsidedown::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  pointer-events: none;
+  background:
+    repeating-linear-gradient(to bottom, rgba(255, 255, 255, 0.025) 0, rgba(255, 255, 255, 0.025) 1px, transparent 1px, transparent 3px),
+    radial-gradient(ellipse at center, transparent 60%, rgba(0, 0, 0, 0.6) 100%);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  body.theme-upsidedown::after {
+    animation: upsidedown-vhs 9s steps(1) infinite;
+  }
+}
+
+@keyframes upsidedown-vhs {
+  0%, 93%, 100% { opacity: 1; transform: none; }
+  94% { opacity: 0.6; transform: translateY(2px); }
+  95% { opacity: 1; transform: translateY(-1px); }
+  97% { opacity: 0.75; transform: none; }
+}
+
+/* ------------------------------------------------------------------ */
+/* Sci-fi helmet HUD: translucent cyan panels with cut corners         */
+/* (inspired by Halo)                                                  */
+/* ------------------------------------------------------------------ */
+
+body.theme-spartan {
+  --t-bg: #03121a;
+  --t-fg: #9ff3ff;
+  --t-muted: #5fb7c9;
+  --t-accent: #36c6ff;
+  --t-accent-ink: #021018;
+  --t-panel: #041e2a;
+  --t-chart-bg: rgba(6, 32, 46, 0.65);
+  --t-grid: #134a5e;
+  --t-line: #9ff3ff;
+  --t-forecast: #d5a6ff;
+  --t-basal: #2a7fa0;
+  --t-in: #9ff3ff;
+  --t-warn: #ffb84d;
+  --t-urgent: #ff4d4d;
+  --t-font: 'Oxanium', 'Segoe UI', sans-serif;
+  --t-radius: 0;
+  --t-border: 1px;
+
+  background: #03121a radial-gradient(ellipse at center, #0a2a3a 0%, #03121a 70%) fixed;
+}
+
+body.theme-spartan #currentTime,
+body.theme-spartan .inrange .bgButton,
+body.theme-spartan .inrange .currentBG {
+  text-shadow: 0 0 8px rgba(54, 198, 255, 0.7);
+}
+
+/* angled corners on panels, buttons and labels */
+body.theme-spartan .pill,
+body.theme-spartan legend,
+body.theme-spartan .navigation a,
+body.theme-spartan button,
+body.theme-spartan #admin_placeholder button,
+body.theme-spartan .focus-range li.selected {
+  clip-path: polygon(8px 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%, 0 8px);
+}
+
+body.theme-spartan .bgButton,
+body.theme-spartan .statusBox {
+  outline: 1px solid rgba(54, 198, 255, 0.7);
+  outline-offset: 3px;
+  background: rgba(54, 198, 255, 0.06);
+}
+
+body.theme-spartan .pill em,
+body.theme-spartan .statusPills .pill em {
+  background: #021018;
+  color: #9ff3ff;
+}
+
+body.theme-spartan #chartContainer {
+  box-shadow: inset 0 0 0 1px rgba(54, 198, 255, 0.7), inset 0 0 30px rgba(54, 198, 255, 0.12);
+}
+
+body.theme-spartan #toolbar {
+  background: rgba(3, 18, 26, 0.85);
+  border-bottom: 1px solid rgba(54, 198, 255, 0.7);
+}
+
+body.theme-spartan #toolbar .customTitle {
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+
+/* ------------------------------------------------------------------ */
+/* Light grid: black with thin glowing cyan lines (inspired by Tron)   */
+/* ------------------------------------------------------------------ */
+
+body.theme-tron {
+  --t-bg: #000;
+  --t-fg: #c8f7ff;
+  --t-muted: #6fb8c6;
+  --t-accent: #00e5ff;
+  --t-accent-ink: #001014;
+  --t-panel: #000;
+  --t-chart-bg: #000;
+  --t-grid: #0a3c46;
+  --t-line: #00e5ff;
+  --t-forecast: #ffffff;
+  --t-basal: #007a8a;
+  --t-in: #00e5ff;
+  --t-warn: #ff9f1c;
+  --t-urgent: #ff3b30;
+  --t-font: 'Audiowide', 'Orbitron', sans-serif;
+  --t-radius: 3px;
+  --t-border: 1px;
+}
+
+body.theme-tron #toolbar {
+  box-shadow: 0 1px 0 #00e5ff, 0 0 14px rgba(0, 229, 255, 0.6);
+}
+
+body.theme-tron #toolbar .customTitle {
+  color: #00e5ff;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  text-shadow: 0 0 8px rgba(0, 229, 255, 0.9);
+}
+
+body.theme-tron #currentTime,
+body.theme-tron .inrange .bgButton,
+body.theme-tron .inrange .currentBG {
+  text-shadow: 0 0 10px rgba(0, 229, 255, 0.9);
+}
+
+body.theme-tron .bgButton,
+body.theme-tron .statusBox {
+  outline: 1px solid #00e5ff;
+  outline-offset: 3px;
+  box-shadow: 0 0 14px rgba(0, 229, 255, 0.55), inset 0 0 14px rgba(0, 229, 255, 0.2);
+}
+
+body.theme-tron .pill {
+  background: #000;
+  box-shadow: 0 0 8px rgba(0, 229, 255, 0.6);
+}
+
+body.theme-tron .pill label {
+  color: #00e5ff;
+}
+
+body.theme-tron .pill em,
+body.theme-tron .statusPills .pill em {
+  background: #00e5ff;
+  color: #001014;
+}
+
+body.theme-tron #chartContainer {
+  box-shadow: inset 0 0 0 1px #00e5ff, 0 0 16px rgba(0, 229, 255, 0.5);
+}
+
+body.theme-tron #chartContainer svg {
+  filter: drop-shadow(0 0 2px rgba(0, 229, 255, 0.7));
+}
+
+body.theme-tron .navigation a,
+body.theme-tron button,
+body.theme-tron #admin_placeholder button {
+  box-shadow: 0 0 10px rgba(0, 229, 255, 0.6);
+}
+
+/* ------------------------------------------------------------------ */
+/* Neon sign: glowing glass tubes on a dark brick wall                 */
+/* ------------------------------------------------------------------ */
+
+body.theme-neon {
+  --t-bg: #140b0b;
+  --t-fg: #ffe9f8;
+  --t-muted: #c79bb8;
+  --t-accent: #ff4fd8;
+  --t-accent-ink: #1a0614;
+  --t-panel: #1b0f0f;
+  --t-chart-bg: rgba(10, 4, 8, 0.85);
+  --t-grid: #4a2236;
+  --t-line: #ff9be9;
+  --t-forecast: #7df9ff;
+  --t-basal: #8a2c76;
+  --t-in: #39ff14;
+  --t-warn: #ffd300;
+  --t-urgent: #ff2e2e;
+  --t-title-font: 'Monoton', 'Audiowide', sans-serif;
+  --t-radius: 10px;
+
+  /* dark brick wall */
+  background:
+    linear-gradient(rgba(0, 0, 0, 0.55) 2px, transparent 2px) 0 0 / 80px 40px,
+    linear-gradient(90deg, rgba(0, 0, 0, 0.55) 2px, transparent 2px) 0 0 / 80px 80px,
+    linear-gradient(90deg, rgba(0, 0, 0, 0.55) 2px, transparent 2px) 40px 40px / 80px 80px,
+    #241212;
+}
+
+body.theme-neon #toolbar {
+  background: rgba(20, 11, 11, 0.85);
+  border-bottom: none;
+}
+
+body.theme-neon #toolbar .customTitle {
+  color: #ff4fd8;
+  font-size: 1.5em;
+  text-shadow: 0 0 6px #ff4fd8, 0 0 16px #ff4fd8, 0 0 32px rgba(255, 79, 216, 0.6);
+}
+
+body.theme-neon #currentTime {
+  color: #7df9ff;
+  text-shadow: 0 0 6px #7df9ff, 0 0 18px rgba(125, 249, 255, 0.7);
+}
+
+body.theme-neon .inrange .bgButton,
+body.theme-neon .inrange .currentBG {
+  text-shadow: 0 0 6px #39ff14, 0 0 20px rgba(57, 255, 20, 0.7);
+}
+
+body.theme-neon .warning .bgButton .currentBG {
+  text-shadow: 0 0 6px #ffd300, 0 0 20px rgba(255, 211, 0, 0.7);
+}
+
+body.theme-neon .urgent .bgButton .currentBG {
+  text-shadow: 0 0 6px #ff2e2e, 0 0 20px rgba(255, 46, 46, 0.7);
+}
+
+body.theme-neon .bgButton {
+  outline: 3px solid #ff4fd8;
+  outline-offset: 4px;
+  border-radius: 14px;
+  box-shadow: 0 0 12px #ff4fd8, inset 0 0 12px rgba(255, 79, 216, 0.4);
+}
+
+body.theme-neon .pill {
+  box-shadow: 0 0 8px rgba(255, 79, 216, 0.8);
+}
+
+body.theme-neon #chartContainer {
+  border-radius: 12px;
+  box-shadow: inset 0 0 0 2px #7df9ff, 0 0 16px rgba(125, 249, 255, 0.5);
+}
+
+/* a slow hum: the tubes brighten and dim a little (never the alarm box) */
+@media (prefers-reduced-motion: no-preference) {
+  body.theme-neon #toolbar .customTitle,
+  body.theme-neon #currentTime {
+    animation: neon-hum 4s ease-in-out infinite;
+  }
+}
+
+@keyframes neon-hum {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.82; }
+}
+
+/* ------------------------------------------------------------------ */
+/* Gauges: brushed-metal instrument dashboard with a bezel dial        */
+/* ------------------------------------------------------------------ */
+
+body.theme-gauges {
+  --t-bg: #2b2f33;
+  --t-fg: #f1f1f1;
+  --t-muted: #b5bcc2;
+  --t-accent: #c9a227;
+  --t-accent-ink: #1a1408;
+  --t-panel: #33383d;
+  --t-chart-bg: #111417;
+  --t-grid: #3c444b;
+  --t-line: #e6e6e6;
+  --t-in: #4cd964;
+  --t-warn: #ffcc00;
+  --t-urgent: #ff3b30;
+  --t-font: 'Rajdhani', 'Arial Narrow', sans-serif;
+  --t-number-font: 'Rajdhani', 'Arial Narrow', sans-serif;
+  --t-radius: 6px;
+
+  /* brushed metal */
+  background:
+    repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.025) 0, rgba(255, 255, 255, 0.025) 1px, transparent 1px, transparent 3px),
+    linear-gradient(to bottom, #3a3f44, #24282c);
+  font-weight: 500;
+}
+
+body.theme-gauges #toolbar {
+  background: linear-gradient(to bottom, #4a5056, #2f3439);
+  border-bottom: 2px solid #c9a227;
+}
+
+body.theme-gauges #toolbar .customTitle {
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+}
+
+/* the reading sits in a chrome bezel around a dark glass face */
+body.theme-gauges .bgButton {
+  background: radial-gradient(ellipse at 50% 30%, #2a3036 0%, #0d1012 75%);
+  border-radius: 999px;
+  box-shadow:
+    0 0 0 4px #9aa1a8,
+    0 0 0 7px #5d646b,
+    0 0 0 9px #c9a227,
+    0 6px 14px rgba(0, 0, 0, 0.6),
+    inset 0 4px 12px rgba(0, 0, 0, 0.8);
+}
+
+/* while alarming the face lights up in the alarm colour so the dark
+   reading stays legible */
+body.theme-gauges .alarming.warning .bgButton {
+  background: var(--t-warn);
+}
+
+body.theme-gauges .alarming.urgent .bgButton {
+  background: var(--t-urgent);
+}
+
+body.theme-gauges .statusBox {
+  box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.6), 0 1px 0 rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+}
+
+body.theme-gauges .pill {
+  background: linear-gradient(to bottom, #e2c35a, #a8841a);
+  border-color: #8a6c12;
+}
+
+body.theme-gauges .pill em,
+body.theme-gauges .statusPills .pill em {
+  background: #111417;
+  color: #f1f1f1;
+}
+
+body.theme-gauges #chartContainer {
+  border-radius: 8px;
+  box-shadow: inset 0 0 0 2px #5d646b, inset 0 4px 16px rgba(0, 0, 0, 0.8);
+}
+
+body.theme-gauges .navigation a,
+body.theme-gauges button,
+body.theme-gauges #admin_placeholder button {
+  background: linear-gradient(to bottom, #e2c35a, #a8841a);
+  border-color: #8a6c12;
+}
+
+/* ------------------------------------------------------------------ */
+/* Team colors: jersey style; navy and gold until a team is chosen     */
+/* ------------------------------------------------------------------ */
+
+body.theme-team {
+  --t-bg: #0b2545;
+  --t-fg: #ffffff;
+  --t-muted: #b8c7dc;
+  --t-accent: #ffb81c;
+  --t-accent-ink: #0b2545;
+  --t-panel: #13315c;
+  --t-chart-bg: #0e2a50;
+  --t-grid: #2c4c7a;
+  --t-line: #ffffff;
+  --t-forecast: #ffe08a;
+  --t-basal: #5c86c4;
+  --t-in: #ffffff;
+  --t-warn: #ff8c42;
+  --t-urgent: #ff3b3b;
+  --t-font: 'Inter', 'Helvetica Neue', sans-serif;
+  --t-number-font: 'Teko', 'Impact', sans-serif;
+  --t-title-font: 'Teko', 'Impact', sans-serif;
+  --t-radius: 4px;
+}
+
+/* jersey stripes along the top bar */
+body.theme-team #toolbar {
+  background: linear-gradient(to bottom, #0b2545 0, #0b2545 calc(100% - 9px), #ffb81c calc(100% - 9px), #ffb81c calc(100% - 6px), #fff calc(100% - 6px), #fff calc(100% - 3px), #ffb81c calc(100% - 3px));
+  border-bottom: none;
+}
+
+body.theme-team #toolbar .customTitle {
+  color: #ffb81c;
+  font-size: 1.6em;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+body.theme-team .bgStatus .currentBG,
+body.theme-team #currentTime {
+  letter-spacing: 0.02em;
+}
+
+body.theme-team .bgButton {
+  outline: 3px solid #ffb81c;
+  outline-offset: 3px;
+}
+
+body.theme-team .pill em,
+body.theme-team .statusPills .pill em {
+  background: #0b2545;
+  color: #fff;
+}
+
+body.theme-team #chartContainer {
+  box-shadow: inset 0 0 0 3px #ffb81c;
+}
+
+/* ------------------------------------------------------------------ */
+/* Halloween: pumpkin orange and slime green on midnight purple        */
+/* ------------------------------------------------------------------ */
+
+body.theme-halloween {
+  --t-bg: #0d0614;
+  --t-fg: #f5e6ff;
+  --t-muted: #b79bd0;
+  --t-accent: #ff7518;
+  --t-accent-ink: #1a0a00;
+  --t-panel: #170b22;
+  --t-chart-bg: #10071a;
+  --t-grid: #3b2152;
+  --t-line: #c9a7e8;
+  --t-forecast: #b388ff;
+  --t-basal: #6a3d99;
+  --t-in: #c6ff00;
+  --t-warn: #ffd600;
+  --t-urgent: #ff1744;
+  --t-title-font: 'Creepster', 'Impact', cursive;
+  --t-radius: 8px;
+
+  background: #0d0614 radial-gradient(circle at 85% 12%, rgba(255, 214, 120, 0.18) 0, rgba(255, 214, 120, 0.05) 70px, transparent 120px) fixed;
+}
+
+body.theme-halloween #toolbar {
+  background: #170b22;
+  border-bottom: 2px solid #ff7518;
+}
+
+body.theme-halloween #toolbar .customTitle {
+  color: #ff7518;
+  font-size: 1.6em;
+  letter-spacing: 0.06em;
+  text-shadow: 0 0 10px rgba(255, 117, 24, 0.7);
+}
+
+body.theme-halloween #currentTime {
+  color: #ff9a4d;
+}
+
+body.theme-halloween .inrange .bgButton,
+body.theme-halloween .inrange .currentBG {
+  text-shadow: 0 0 12px rgba(198, 255, 0, 0.6);
+}
+
+body.theme-halloween .bgButton {
+  outline: 2px solid #ff7518;
+  outline-offset: 4px;
+  border-radius: 18px;
+  box-shadow: 0 0 18px rgba(255, 117, 24, 0.45);
+}
+
+body.theme-halloween .pill em,
+body.theme-halloween .statusPills .pill em {
+  background: #10071a;
+  color: #ffb27a;
+}
+
+/* a cobweb in the chart's top-left corner */
+body.theme-halloween #chartContainer {
+  z-index: 0;
+  box-shadow: inset 0 0 0 2px #6a3d99;
+}
+
+body.theme-halloween #chartContainer::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 150px;
+  height: 150px;
+  z-index: -1;
+  pointer-events: none;
+  opacity: 0.45;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='150' height='150' fill='none' stroke='%23c9a7e8' stroke-width='1'%3E%3Cpath d='M0 0L150 40M0 0L120 120M0 0L40 150M0 0L150 0M0 0L0 150'/%3E%3Cpath d='M30 0Q22 22 0 30M60 0Q46 46 0 60M95 0Q72 72 0 95M130 0Q100 100 0 130'/%3E%3C/svg%3E") no-repeat;
+}
+
+/* ------------------------------------------------------------------ */
+/* Cyberpunk: magenta and cyan neon with falling rain                  */
+/* ------------------------------------------------------------------ */
+
+body.theme-cyberpunk {
+  --t-bg: #0a0a14;
+  --t-fg: #e0e0ff;
+  --t-muted: #8a8ab8;
+  --t-accent: #ff00a0;
+  --t-accent-ink: #0a0a14;
+  --t-panel: #11111f;
+  --t-chart-bg: rgba(10, 10, 20, 0.88);
+  --t-grid: #2a2050;
+  --t-line: #00f0ff;
+  --t-forecast: #ff7ad1;
+  --t-basal: #5a2a8a;
+  --t-in: #00f0ff;
+  --t-warn: #f7e600;
+  --t-urgent: #ff2a2a;
+  --t-font: 'Share Tech Mono', 'Consolas', monospace;
+  --t-number-font: 'Orbitron', sans-serif;
+  --t-radius: 0;
+  --t-border: 1px;
+}
+
+/* glitchy split-colour title */
+body.theme-cyberpunk #toolbar .customTitle {
+  color: #e0e0ff;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  text-shadow: -2px 0 #ff00a0, 2px 0 #00f0ff;
+}
+
+body.theme-cyberpunk #toolbar {
+  border-bottom: 1px solid #ff00a0;
+  box-shadow: 0 0 12px rgba(255, 0, 160, 0.6);
+}
+
+body.theme-cyberpunk #currentTime {
+  color: #ff00a0;
+  text-shadow: -2px 0 rgba(0, 240, 255, 0.6), 0 0 12px rgba(255, 0, 160, 0.7);
+}
+
+body.theme-cyberpunk .inrange .bgButton,
+body.theme-cyberpunk .inrange .currentBG {
+  text-shadow: 2px 0 rgba(255, 0, 160, 0.6), 0 0 14px rgba(0, 240, 255, 0.7);
+}
+
+body.theme-cyberpunk .bgButton,
+body.theme-cyberpunk .statusBox {
+  outline: 1px solid #00f0ff;
+  outline-offset: 3px;
+  box-shadow: 0 0 12px rgba(0, 240, 255, 0.5);
+}
+
+body.theme-cyberpunk .pill em,
+body.theme-cyberpunk .statusPills .pill em {
+  background: #0a0a14;
+  color: #00f0ff;
+}
+
+body.theme-cyberpunk #chartContainer {
+  box-shadow: inset 0 0 0 1px #ff00a0, 0 0 14px rgba(255, 0, 160, 0.45);
+}
+
+/* neon rain behind the page (the chart panel covers most of it) */
+body.theme-cyberpunk::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  opacity: 0.35;
+  background:
+    repeating-linear-gradient(105deg, transparent 0, transparent 38px, rgba(0, 240, 255, 0.35) 38px, rgba(0, 240, 255, 0.35) 39px, transparent 39px, transparent 90px),
+    repeating-linear-gradient(105deg, transparent 0, transparent 61px, rgba(255, 0, 160, 0.3) 61px, rgba(255, 0, 160, 0.3) 62px, transparent 62px, transparent 140px);
+  background-size: 100% 220px;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  body.theme-cyberpunk::before {
+    animation: cyberpunk-rain 1.6s linear infinite;
+  }
+}
+
+@keyframes cyberpunk-rain {
+  from { background-position: 0 0; }
+  to { background-position: -60px 220px; }
+}
+
+/* ------------------------------------------------------------------ */
+/* Night City: yellow, red and cyan with clipped corners               */
+/* (inspired by Cyberpunk 2077)                                        */
+/* ------------------------------------------------------------------ */
+
+body.theme-cyberpunk2077 {
+  --t-bg: #0d0d0d;
+  --t-fg: #f0f0f0;
+  --t-muted: #a8a8a8;
+  --t-accent: #fcee0a;
+  --t-accent-ink: #0d0d0d;
+  --t-panel: #141414;
+  --t-chart-bg: #0a0a0a;
+  --t-grid: #3a1a20;
+  --t-line: #00f0ff;
+  --t-forecast: #ff6b8a;
+  --t-basal: #6a5f00;
+  --t-in: #00f0ff;
+  --t-warn: #ff9a00;
+  --t-urgent: #ff003c;
+  --t-font: 'Rajdhani', 'Arial Narrow', sans-serif;
+  --t-number-font: 'Rajdhani', 'Arial Narrow', sans-serif;
+  --t-title-font: 'Rajdhani', 'Arial Narrow', sans-serif;
+  --t-radius: 0;
+
+  font-weight: 700;
+}
+
+body.theme-cyberpunk2077 #toolbar {
+  background: #0d0d0d;
+  border-bottom: 3px solid #fcee0a;
+}
+
+/* the title is a yellow tag with a clipped corner */
+body.theme-cyberpunk2077 #toolbar .customTitle {
+  background: #fcee0a;
+  color: #0d0d0d;
+  padding: 0 28px 0 14px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  clip-path: polygon(0 0, 100% 0, calc(100% - 14px) 100%, 0 100%);
+}
+
+body.theme-cyberpunk2077 #container.alarming.warning .customTitle {
+  background: var(--t-warn);
+  color: #000;
+}
+
+body.theme-cyberpunk2077 #container.alarming.urgent .customTitle {
+  background: var(--t-urgent);
+  color: #000;
+}
+
+body.theme-cyberpunk2077 #currentTime {
+  color: #fcee0a;
+}
+
+body.theme-cyberpunk2077 .pill,
+body.theme-cyberpunk2077 legend,
+body.theme-cyberpunk2077 .navigation a,
+body.theme-cyberpunk2077 button,
+body.theme-cyberpunk2077 #admin_placeholder button,
+body.theme-cyberpunk2077 .focus-range li.selected {
+  clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 0 100%);
+  text-transform: uppercase;
+}
+
+body.theme-cyberpunk2077 .bgButton {
+  outline: 2px solid #ff003c;
+  outline-offset: 3px;
+  box-shadow: 6px 6px 0 rgba(0, 240, 255, 0.35);
+}
+
+body.theme-cyberpunk2077 .pill em,
+body.theme-cyberpunk2077 .statusPills .pill em {
+  background: #0d0d0d;
+  color: #fcee0a;
+}
+
+body.theme-cyberpunk2077 #chartContainer {
+  box-shadow: inset 0 0 0 1px #ff003c, inset 4px 0 0 #fcee0a;
+}
