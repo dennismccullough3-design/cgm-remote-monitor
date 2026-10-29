@@ -45,6 +45,7 @@
     "test:parallel:ci": "CLEAR_REQUIRE_CACHE=true env-cmd -f ./tests/ci.test.env nyc --reporter=lcov --reporter=text-summary mocha --timeout 10000 --require ./tests/hooks.js --exit --parallel --jobs 2 ./tests/*.test.js",
     "env": "env",
     "postinstall": "webpack --mode production --config webpack/webpack.config.js && npm run-script post-generate-keys",
+    "build-theme-css": "node bin/build-theme-css.js",
     "bundle": "webpack --mode production --config webpack/webpack.config.js && npm run-script post-generate-keys",
     "bundle-dev": "webpack --mode development --config webpack/webpack.config.js && npm run-script post-generate-keys",
     "bundle-analyzer": "webpack --mode development --config webpack/webpack.config.js --profile --json > stats.json && webpack-bundle-analyzer stats.json",
